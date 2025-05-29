@@ -42,6 +42,40 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
         return;
       }
 
+      // Verificar se o e-mail já está cadastrado
+      const { data: emailExists } = await supabase
+        .from('users')
+        .select('email')
+        .eq('email', formData.email)
+        .single();
+
+      if (emailExists) {
+        toast({
+          title: "Erro no cadastro",
+          description: "Este e-mail já está em uso.",
+          variant: "destructive"
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Verificar se o telefone já está cadastrado
+      const { data: phoneExists } = await supabase
+        .from('users')
+        .select('phone')
+        .eq('phone', formData.phone)
+        .single();
+
+      if (phoneExists) {
+        toast({
+          title: "Erro no cadastro",
+          description: "Este telefone já está em uso.",
+          variant: "destructive"
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
       try {
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email: formData.email,
@@ -99,17 +133,17 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
     }
 
     if (mode === 'login') {
-      if (!formData.phone.trim() || !formData.password.trim()) {
+      if (!formData.email.trim() || !formData.password.trim()) {
         toast({
           title: "Erro no login",
-          description: "Telefone e senha são obrigatórios",
+          description: "Email e senha são obrigatórios",
           variant: "destructive"
         });
         return;
       }
 
       // Verificar se é login de administrador
-      if (formData.phone === '999999999' && formData.password === 'admin') {
+      if (formData.email === 'admin@barbershop.com' && formData.password === 'admin') {
         toast({
           title: "Login de Administrador",
           description: "Bem-vindo, Administrador!",
@@ -117,7 +151,7 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
 
         onAuthSuccess({
           name: 'Administrador',
-          phone: formData.phone,
+          phone: '999999999',
           email: 'admin@barbershop.com',
           isAdmin: true
         });
@@ -136,17 +170,25 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
 
         if (loginError) throw new Error(loginError.message);
 
-        const user = loginData.user;
+        // Recuperar informações adicionais do usuário da tabela `users`
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('name, phone, email, isAdmin')
+          .eq('email', loginData.user?.email || '')
+          .single();
+
+        if (userError) throw new Error(userError.message);
+
         toast({
           title: "Login realizado!",
-          description: `Bem-vindo, ${user.user_metadata.name || 'cliente'}!`,
+          description: `Bem-vindo, ${userData?.name || 'cliente'}!`,
         });
 
         onAuthSuccess({
-          name: user.user_metadata.name || 'Cliente',
-          phone: user.user_metadata.phone || formData.phone,
-          email: user.email || '',
-          isAdmin: false
+          name: userData?.name || 'Cliente',
+          phone: userData?.phone || formData.phone,
+          email: userData?.email || '',
+          isAdmin: userData?.isAdmin || false
         });
 
         setFormData({ name: '', phone: '', email: '', password: '' });
@@ -164,6 +206,28 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleResendConfirmationEmail = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "E-mail de confirmação reenviado",
+        description: "Verifique sua caixa de entrada.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro ao reenviar e-mail",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -197,17 +261,17 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="phone" className="text-white">
-              Telefone *
+            <Label htmlFor="email" className="text-white">
+              Email *
             </Label>
             <div className="relative">
-              <Phone className="absolute left-3 top-3 w-4 h-4 text-gold" />
+              <Mail className="absolute left-3 top-3 w-4 h-4 text-gold" />
               <Input
-                id="phone"
-                type="tel"
-                placeholder="(11) 99999-9999"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
+                id="email"
+                type="email"
+                placeholder="seu@email.com"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
                 className="bg-gray-800 border-gold/20 text-white pl-10 focus:border-gold"
                 required
               />
@@ -217,16 +281,16 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
           {mode === 'register' && (
             <div className="space-y-2">
               <Label htmlFor="email" className="text-white">
-                Email *
+                Telefone *
               </Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-4 h-4 text-gold" />
+                <Phone className="absolute left-3 top-3 w-4 h-4 text-gold" />
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="seu@email.com"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  id="phone"
+                  type="tel"
+                  placeholder="(11) 99999-9999"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
                   className="bg-gray-800 border-gold/20 text-white pl-10 focus:border-gold"
                   required
                 />
