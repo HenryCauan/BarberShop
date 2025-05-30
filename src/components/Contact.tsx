@@ -1,6 +1,5 @@
-
 import { Card } from "@/components/ui/card";
-import { MapPin, Clock, Phone, Mail } from "lucide-react";
+import { MapPin, Clock, Phone, Mail, Instagram, Facebook, MessageCircle } from "lucide-react";
 
 const Contact = () => {
   return (
@@ -51,6 +50,37 @@ const Contact = () => {
               agendamento@barbershop.com
             </p>
           </Card>
+        </div>
+
+        {/* Seção de Redes Sociais */}
+        <div className="mt-12 text-center">
+          <h3 className="text-2xl font-bold text-white mb-6">Siga-nos nas Redes Sociais</h3>
+          <div className="flex justify-center space-x-6">
+            <a 
+              href="https://wa.me/5511999999999" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-colors"
+            >
+              <MessageCircle className="w-6 h-6" />
+            </a>
+            <a 
+              href="https://instagram.com/barbershop" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-pink-600 hover:bg-pink-700 text-white p-3 rounded-full transition-colors"
+            >
+              <Instagram className="w-6 h-6" />
+            </a>
+            <a 
+              href="https://facebook.com/barbershop" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition-colors"
+            >
+              <Facebook className="w-6 h-6" />
+            </a>
+          </div>
         </div>
       </div>
     </section>
