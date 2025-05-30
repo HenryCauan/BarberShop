@@ -118,7 +118,7 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
                           Agendar
                         </Button>
                       </Link>
-                      <Link to="/history">
+                      <Link to="/historico">
                         <Button className="w-full bg-gold hover:bg-gold/80 text-black">
                           <History className="w-4 h-4 mr-2" />
                           Histórico
