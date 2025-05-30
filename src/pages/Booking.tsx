@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -12,6 +11,8 @@ const Booking = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [selectedService, setSelectedService] = useState<string>('');
+  const [clientName, setClientName] = useState<string>('');
+  const [clientPhone, setClientPhone] = useState<string>('');
   const { toast } = useToast();
 
   const services = [
@@ -38,6 +39,22 @@ const Booking = () => {
       });
       return;
     }
+
+    // Criar o objeto do agendamento
+    const newAppointment = {
+      id: Date.now().toString(), // ID único
+      clientName: "Cliente", // Substitua por um campo de input ou contexto de autenticação
+      clientPhone: "(00) 00000-0000", // Substitua por um campo de input
+      service: services.find(s => s.id === selectedService)?.name || selectedService,
+      date: selectedDate.toISOString().split('T')[0], // Formato YYYY-MM-DD
+      time: selectedTime,
+      status: "pending" as const // Status inicial
+    };
+
+    // Salvar no localStorage
+    const existingAppointments = JSON.parse(localStorage.getItem('adminAppointments') || '[]');
+    const updatedAppointments = [...existingAppointments, newAppointment];
+    localStorage.setItem('adminAppointments', JSON.stringify(updatedAppointments));
 
     toast({
       title: "Agendamento confirmado!",
@@ -127,12 +144,37 @@ const Booking = () => {
                   className={
                     selectedTime === time
                       ? "bg-gold text-black hover:bg-gold/80"
-                      : "border-gray-700 text-gray-300 hover:border-gold hover:text-gold"
+                      : "border-gray-700 text-black hover:border-gold hover:text-gold"
                   }
                 >
                   {time}
                 </Button>
               ))}
+            </div>
+          </Card>
+
+          {/* Novo Card para Dados do Cliente */}
+          <Card className="bg-gray-900/50 border-gold/20 p-6">
+            <h2 className="text-xl font-bold text-white mb-4">Seus Dados</h2>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-white">Nome</Label>
+                <input
+                  type="text"
+                  value={clientName}
+                  onChange={(e) => setClientName(e.target.value)}
+                  className="w-full bg-gray-800 border border-gray-700 rounded-md p-2 text-white"
+                />
+              </div>
+              <div>
+                <Label className="text-white">Telefone</Label>
+                <input
+                  type="tel"
+                  value={clientPhone}
+                  onChange={(e) => setClientPhone(e.target.value)}
+                  className="w-full bg-gray-800 border border-gray-700 rounded-md p-2 text-white"
+                />
+              </div>
             </div>
           </Card>
         </div>
@@ -165,7 +207,7 @@ const Booking = () => {
           <Button 
             onClick={handleBooking}
             className="w-full bg-gold hover:bg-gold/80 text-black font-semibold text-lg py-3"
-            disabled={!selectedDate || !selectedTime || !selectedService}
+            disabled={!selectedDate || !selectedTime || !selectedService || !clientName || !clientPhone}
           >
             Confirmar Agendamento
           </Button>

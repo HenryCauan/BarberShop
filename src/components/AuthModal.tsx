@@ -168,7 +168,27 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
           password: formData.password
         });
 
-        if (loginError) throw new Error(loginError.message);
+        if (loginError) {
+          if (loginError.message.includes("Email not confirmed")) {
+            toast({
+              title: "E-mail não confirmado",
+              description: "Por favor, verifique seu e-mail e confirme sua conta antes de fazer login.",
+              variant: "destructive",
+              action: (
+                <Button
+                  variant="ghost"
+                  onClick={() => handleResendConfirmationEmail(formData.email)}
+                  className="text-gold hover:text-gold/80"
+                >
+                  Reenviar e-mail de confirmação
+                </Button>
+              ),
+            });
+          } else {
+            throw new Error(loginError.message);
+          }
+          return;
+        }
 
         // Recuperar informações adicionais do usuário da tabela `users`
         const { data: userData, error: userError } = await supabase

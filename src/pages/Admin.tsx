@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
@@ -24,38 +23,30 @@ const Admin = () => {
   const { toast } = useToast();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('list');
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
 
-  // Agendamentos simulados
-  const [appointments, setAppointments] = useState<Appointment[]>([
-    {
-      id: '1',
-      clientName: 'João Silva',
-      clientPhone: '(11) 99999-1234',
-      service: 'Corte + Barba',
-      date: new Date().toISOString().split('T')[0],
-      time: '09:00',
-      status: 'pending'
-    },
-    {
-      id: '2',
-      clientName: 'Maria Santos',
-      clientPhone: '(11) 99999-5678',
-      service: 'Corte Clássico',
-      date: new Date().toISOString().split('T')[0],
-      time: '10:30',
-      status: 'confirmed'
-    },
-    {
-      id: '3',
-      clientName: 'Pedro Costa',
-      clientPhone: '(11) 99999-9012',
-      service: 'Pacote VIP',
-      date: new Date().toISOString().split('T')[0],
-      time: '14:00',
-      status: 'pending'
+  // Carregar agendamentos do localStorage
+  useEffect(() => {
+    const savedAppointments = localStorage.getItem('adminAppointments');
+    if (savedAppointments) {
+      setAppointments(JSON.parse(savedAppointments));
     }
-  ]);
+  }, []);
 
+  // Atualizar quando o localStorage mudar
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const savedAppointments = localStorage.getItem('adminAppointments');
+      if (savedAppointments) {
+        setAppointments(JSON.parse(savedAppointments));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // Filtrar agendamentos por data selecionada
   const filteredAppointments = appointments.filter(apt => {
     if (selectedDate) {
       return apt.date === selectedDate.toISOString().split('T')[0];

@@ -1,7 +1,6 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, Calendar, Settings } from "lucide-react";
+import { Menu, X, User, Calendar, Settings, History } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -43,12 +42,20 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
                     </Button>
                   </Link>
                 ) : (
-                  <Link to="/booking">
-                    <Button className="bg-gold hover:bg-gold/80 text-black">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Agendar
-                    </Button>
-                  </Link>
+                  <div className="flex items-center space-x-4">
+                    <Link to="/booking">
+                      <Button className="bg-gold hover:bg-gold/80 text-black">
+                        <Calendar className="w-4 h-4 mr-2" />
+                        Agendar
+                      </Button>
+                    </Link>
+                    <Link to="/historico">
+                      <Button className="bg-gold hover:bg-gold/80 text-black">
+                        <History className="w-4 h-4 mr-2" />
+                        Histórico
+                      </Button>
+                    </Link>
+                  </div>
                 )}
                 
                 <Button variant="outline" onClick={logout} className="border-gold text-gold hover:bg-gold hover:text-black">
@@ -104,12 +111,20 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
                       </Button>
                     </Link>
                   ) : (
-                    <Link to="/booking">
-                      <Button className="w-full bg-gold hover:bg-gold/80 text-black">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        Agendar
-                      </Button>
-                    </Link>
+                    <div className="flex items-center space-x-4">
+                      <Link to="/booking">
+                        <Button className="w-full bg-gold hover:bg-gold/80 text-black">
+                          <Calendar className="w-4 h-4 mr-2" />
+                          Agendar
+                        </Button>
+                      </Link>
+                      <Link to="/history">
+                        <Button className="w-full bg-gold hover:bg-gold/80 text-black">
+                          <History className="w-4 h-4 mr-2" />
+                          Histórico
+                        </Button>
+                      </Link>
+                    </div>
                   )}
                   
                   <Button variant="outline" onClick={logout} className="w-full border-gold text-gold hover:bg-gold hover:text-black">
