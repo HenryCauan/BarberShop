@@ -7,6 +7,7 @@ import { ArrowLeft, Calendar as CalendarIcon, List, Clock, User, Phone, CheckCir
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { io } from "socket.io-client";
 
 interface Appointment {
   id: string;
@@ -82,6 +83,30 @@ const Admin = () => {
       default: return 'Pendente';
     }
   };
+
+  useEffect(() => {
+    const socket = io('URL_DO_SEU_SERVIDOR_WEBSOCKET');
+    socket.on('newAppointment', (appointment) => {
+      if (Notification.permission === 'granted') {
+        new Notification('Novo Agendamento', {
+          body: `Cliente: ${appointment.clientName}, Horário: ${appointment.time}`,
+        });
+      }
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if ('Notification' in window) {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          console.log('Permissão para notificações concedida');
+        }
+      });
+    }
+  }, []);
 
   if (!user?.isAdmin) {
     return (

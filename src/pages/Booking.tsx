@@ -6,13 +6,16 @@ import { Label } from "@/components/ui/label";
 import { ArrowLeft, Clock, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { io } from "socket.io-client";
 
 const Booking = () => {
+  const { user } = useAuth();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [selectedService, setSelectedService] = useState<string>('');
-  const [clientName, setClientName] = useState<string>('');
-  const [clientPhone, setClientPhone] = useState<string>('');
+  const [clientName, setClientName] = useState<string>(user?.name || '');
+  const [clientPhone, setClientPhone] = useState<string>(user?.phone || '');
   const { toast } = useToast();
 
   const services = [
@@ -40,21 +43,23 @@ const Booking = () => {
       return;
     }
 
-    // Criar o objeto do agendamento
+    const selectedServiceObj = services.find(s => s.id === selectedService);
     const newAppointment = {
-      id: Date.now().toString(), // ID único
-      clientName: "Cliente", // Substitua por um campo de input ou contexto de autenticação
-      clientPhone: "(00) 00000-0000", // Substitua por um campo de input
-      service: services.find(s => s.id === selectedService)?.name || selectedService,
-      date: selectedDate.toISOString().split('T')[0], // Formato YYYY-MM-DD
+      id: Date.now().toString(),
+      clientName: clientName || user?.name || "Cliente não informado",
+      clientPhone: clientPhone || user?.phone || "Telefone não informado",
+      service: selectedServiceObj?.name || selectedService,
+      date: selectedDate.toISOString().split('T')[0],
       time: selectedTime,
-      status: "pending" as const // Status inicial
+      status: 'pending' as const
     };
 
-    // Salvar no localStorage
     const existingAppointments = JSON.parse(localStorage.getItem('adminAppointments') || '[]');
     const updatedAppointments = [...existingAppointments, newAppointment];
     localStorage.setItem('adminAppointments', JSON.stringify(updatedAppointments));
+
+    const socket = io('URL_DO_SEU_SERVIDOR_WEBSOCKET');
+    socket.emit('newAppointment', newAppointment);
 
     toast({
       title: "Agendamento confirmado!",
@@ -152,31 +157,6 @@ const Booking = () => {
               ))}
             </div>
           </Card>
-
-          {/* Novo Card para Dados do Cliente */}
-          <Card className="bg-gray-900/50 border-gold/20 p-6">
-            <h2 className="text-xl font-bold text-white mb-4">Seus Dados</h2>
-            <div className="space-y-4">
-              <div>
-                <Label className="text-white">Nome</Label>
-                <input
-                  type="text"
-                  value={clientName}
-                  onChange={(e) => setClientName(e.target.value)}
-                  className="w-full bg-gray-800 border border-gray-700 rounded-md p-2 text-white"
-                />
-              </div>
-              <div>
-                <Label className="text-white">Telefone</Label>
-                <input
-                  type="tel"
-                  value={clientPhone}
-                  onChange={(e) => setClientPhone(e.target.value)}
-                  className="w-full bg-gray-800 border border-gray-700 rounded-md p-2 text-white"
-                />
-              </div>
-            </div>
-          </Card>
         </div>
 
         {/* Resumo e Confirmação */}
@@ -207,7 +187,7 @@ const Booking = () => {
           <Button 
             onClick={handleBooking}
             className="w-full bg-gold hover:bg-gold/80 text-black font-semibold text-lg py-3"
-            disabled={!selectedDate || !selectedTime || !selectedService || !clientName || !clientPhone}
+            disabled={!selectedDate || !selectedTime || !selectedService}
           >
             Confirmar Agendamento
           </Button>

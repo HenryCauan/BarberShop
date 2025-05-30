@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User, Phone, Mail, Lock } from "lucide-react";
+import { User, Phone, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -24,6 +24,7 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -250,6 +251,36 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!formData.email.trim()) {
+      toast({
+        title: "Erro",
+        description: "Por favor, insira seu e-mail para redefinir a senha.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(formData.email, {
+        redirectTo: "http://localhost:3000/reset-password", // Substitua pela URL da sua página de redefinição
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "E-mail enviado",
+        description: "Verifique sua caixa de entrada para redefinir sua senha.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro ao enviar e-mail",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-gray-900 border-gold/20 text-white">
@@ -326,15 +357,35 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
               <Lock className="absolute left-3 top-3 w-4 h-4 text-gold" />
               <Input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Sua senha"
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
-                className="bg-gray-800 border-gold/20 text-white pl-10 focus:border-gold"
+                className="bg-gray-800 border-gold/20 text-white pl-10 pr-10 focus:border-gold"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-gold hover:text-gold/80"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
+
+          {mode === 'login' && (
+            <div className="text-center">
+              <Button
+                type="button"
+                variant="link"
+                onClick={handleForgotPassword}
+                className="text-gold hover:text-gold/80"
+              >
+                Esqueci minha senha
+              </Button>
+            </div>
+          )}
 
           <Button 
             type="submit" 

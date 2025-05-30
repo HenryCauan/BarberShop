@@ -1,12 +1,15 @@
-
 import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 interface HeroProps {
   onOpenAuth: (mode: 'login' | 'register') => void;
 }
 
 const Hero = ({ onOpenAuth }: HeroProps) => {
+  const { isAuthenticated } = useAuth();
+
   return (
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Background Gradient */}
@@ -35,14 +38,26 @@ const Hero = ({ onOpenAuth }: HeroProps) => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              size="lg" 
-              onClick={() => onOpenAuth('register')}
-              className="bg-gradient-to-r from-gold to-yellow-500 hover:from-yellow-500 hover:to-gold text-black font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 shadow-2xl"
-            >
-              <Calendar className="w-5 h-5 mr-2" />
-              Agendar Agora
-            </Button>
+            {isAuthenticated ? (
+              <Link to="/booking">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-gold to-yellow-500 hover:from-yellow-500 hover:to-gold text-black font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 shadow-2xl"
+                >
+                  <Calendar className="w-5 h-5 mr-2" />
+                  Agendar Agora
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                size="lg"
+                onClick={() => onOpenAuth('register')}
+                className="bg-gradient-to-r from-gold to-yellow-500 hover:from-yellow-500 hover:to-gold text-black font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 shadow-2xl"
+              >
+                <Calendar className="w-5 h-5 mr-2" />
+                Agendar Agora
+              </Button>
+            )}
             
             <Button 
               size="lg" 
