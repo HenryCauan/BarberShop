@@ -176,13 +176,15 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
               description: "Por favor, verifique seu e-mail e confirme sua conta antes de fazer login.",
               variant: "destructive",
               action: (
-                <Button
-                  variant="ghost"
-                  onClick={() => handleResendConfirmationEmail(formData.email)}
-                  className="text-gold hover:text-gold/80"
-                >
-                  Reenviar e-mail de confirmação
-                </Button>
+                <div className="flex flex-col space-y-2">
+                  <Button
+                    variant="ghost"
+                    onClick={() => handleResendConfirmationEmail(formData.email)}
+                    className="text-gold hover:text-gold/80 w-full"
+                  >
+                    Reenviar e-mail de confirmação
+                  </Button>
+                </div>
               ),
             });
           } else {

@@ -62,8 +62,8 @@ const Booking = () => {
     socket.emit('newAppointment', newAppointment);
 
     toast({
-      title: "Agendamento confirmado!",
-      description: `Seu horário foi marcado para ${selectedDate.toLocaleDateString('pt-BR')} às ${selectedTime}`,
+      title: "Aguarde a confirmação do proprietário",
+      description: `Seu horário foi solicitado para ${selectedDate.toLocaleDateString('pt-BR')} às ${selectedTime}`,
     });
   };
 
