@@ -1,73 +1,86 @@
-# Welcome to your Lovable project
 
-## Project info
 
-**URL**: https://lovable.dev/projects/0aa6f47c-f1f5-4733-b1f6-d6c1cb058f10
+# 💈 BarberShop
 
-## How can I edit this code?
+Sistema completo para gerenciamento de barbearias, incluindo funcionalidades de autenticação de usuários e agendamento de horários.
 
-There are several ways of editing your application.
+## 🚀 Funcionalidades
 
-**Use Lovable**
+* Cadastro e login de usuários com autenticação segura.
+* Agendamento de serviços com seleção de data e hora.
+* Visualização de horários disponíveis e agendamentos futuros.
+* Painel administrativo para gerenciamento de agendamentos e usuários.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0aa6f47c-f1f5-4733-b1f6-d6c1cb058f10) and start prompting.
+## 🛠️ Tecnologias Utilizadas
 
-Changes made via Lovable will be committed automatically to this repo.
+* **Frontend**: React.js, Tailwind CSS
+* **Backend**: Node.js, Express
+* **Banco de Dados**: MongoDB
+* **Autenticação**: JWT (JSON Web Tokens)
 
-**Use your preferred IDE**
+## 📦 Instalação
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. Clone o repositório:([GitHub][1])
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+   ```bash
+   git clone https://github.com/HenryCauan/BarberShop.git
+   ```
 
-Follow these steps:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Acesse o diretório do projeto:
 
-# Step 3: Install the necessary dependencies.
-npm i
+   ```bash
+   cd BarberShop
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
 
-**Edit a file directly in GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. Instale as dependências do backend:
 
-**Use GitHub Codespaces**
+   ```bash
+   cd backend
+   npm install
+   ```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
 
-This project is built with:
+4. Configure as variáveis de ambiente no arquivo `.env`.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+5. Inicie o servidor backend:
 
-## How can I deploy this project?
+   ```bash
+   npm start
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/0aa6f47c-f1f5-4733-b1f6-d6c1cb058f10) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
 
-Yes, you can!
+6. Instale as dependências do frontend:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+   ```bash
+   cd ../frontend
+   npm install
+   ```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+
+7. Inicie o servidor frontend:
+
+   ```bash
+   npm start
+   ```
+
+
+
+## 📸 Capturas de Tela
+
+![Image](https://github.com/user-attachments/assets/1df15a95-c2f8-4694-a140-f9e23b75b15c)
+
+## 🤝 Contribuições
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+
+## 📄 Licença
+
+Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
