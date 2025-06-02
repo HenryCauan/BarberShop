@@ -17,6 +17,7 @@ const Booking = () => {
   const [clientName, setClientName] = useState<string>(user?.name || '');
   const [clientPhone, setClientPhone] = useState<string>(user?.phone || '');
   const { toast } = useToast();
+  const [confirmedAppointments, setConfirmedAppointments] = useState<string[]>([]);
 
   const services = [
     { id: 'corte', name: 'Corte Clássico', price: 'R$ 35', duration: '30 min' },
@@ -32,6 +33,10 @@ const Booking = () => {
     '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
     '17:00', '17:30', '18:00', '18:30'
   ];
+
+  const isTimeSlotConfirmed = (time: string) => {
+    return confirmedAppointments.includes(time);
+  };
 
   const handleBooking = () => {
     if (!selectedDate || !selectedTime || !selectedService) {
@@ -65,6 +70,10 @@ const Booking = () => {
       title: "Aguarde a confirmação do proprietário",
       description: `Seu horário foi solicitado para ${selectedDate.toLocaleDateString('pt-BR')} às ${selectedTime}`,
     });
+  };
+
+  const confirmAppointment = (time: string) => {
+    setConfirmedAppointments([...confirmedAppointments, time]);
   };
 
   return (
@@ -145,12 +154,15 @@ const Booking = () => {
                   key={time}
                   variant={selectedTime === time ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedTime(time)}
+                  onClick={() => !isTimeSlotConfirmed(time) && setSelectedTime(time)}
                   className={
-                    selectedTime === time
+                    isTimeSlotConfirmed(time)
+                      ? "bg-red-500 text-white cursor-not-allowed"
+                      : selectedTime === time
                       ? "bg-gold text-black hover:bg-gold/80"
                       : "border-gray-700 text-black hover:border-gold hover:text-gold"
                   }
+                  disabled={isTimeSlotConfirmed(time)}
                 >
                   {time}
                 </Button>
