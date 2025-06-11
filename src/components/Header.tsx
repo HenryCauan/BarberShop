@@ -13,11 +13,11 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
   const { user, logout, isAuthenticated } = useAuth();
 
   return (
-    <header className="fixed top-0 w-full bg-black/90 backdrop-blur-md z-50 border-b border-gold/20">
+    <header className="fixed top-0 w-full bg-black/90 backdrop-blur-md z-50 font-cormorant">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="text-2xl font-bold text-gold">
-            BarberShop Elite
+            Barber
           </div>
 
           {/* Desktop Navigation */}
@@ -67,7 +67,7 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
                 <Button 
                   variant="outline" 
                   onClick={() => onOpenAuth('login')}
-                  className="border-gold text-gold hover:bg-gold hover:text-black"
+                  className="border-white text-white bg-black hover:bg-white hover:text-black"
                 >
                   Entrar
                 </Button>

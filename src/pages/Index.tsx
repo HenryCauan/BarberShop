@@ -7,6 +7,7 @@ import About from "@/components/About";
 import Contact from "@/components/Contact";
 import AuthModal from "@/components/AuthModal";
 import { useAuth } from "@/contexts/AuthContext";
+import Gallery from "@/components/Gallery";
 
 const Index = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -28,6 +29,7 @@ const Index = () => {
       <Hero onOpenAuth={openAuthModal} />
       <Services />
       <About />
+      <Gallery />
       <Contact />
       <AuthModal 
         isOpen={isAuthModalOpen}

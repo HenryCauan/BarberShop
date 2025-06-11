@@ -3,10 +3,10 @@ const About = () => {
   return (
     <section id="about" className="py-20 bg-black">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center font-futura" >
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Tradição e <span className="text-gold">Excelência</span>
+            <h2 className="text-4xl md:text-8xl font-cormorant text-white mb-6">
+              TRADICAO E <span className="text-gold">EXCELENCIA</span>
             </h2>
             <p className="text-lg text-gray-300 mb-6 leading-relaxed">
               Há mais de 15 anos oferecendo os melhores serviços de barbearia da cidade. 
@@ -35,14 +35,7 @@ const About = () => {
           </div>
           
           <div className="relative">
-            <div className="aspect-square bg-gradient-to-br from-gold/20 to-transparent rounded-full p-8">
-              <div className="w-full h-full bg-gray-800 rounded-full flex items-center justify-center">
-                <div className="text-center text-white">
-                  <div className="text-6xl mb-4">✂️</div>
-                  <div className="text-xl font-semibold">Mestres do Corte</div>
-                </div>
-              </div>
-            </div>
+            <img src="/image(7).png" alt="" />
           </div>
         </div>
       </div>
