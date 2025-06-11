@@ -1,7 +1,30 @@
+import { useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+
 
 const About = () => {
+
+  useEffect(() => {
+    gsap.fromTo(
+      '.section-three',
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 2,
+        scrollTrigger: {
+          trigger: '.section-three',
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
+      }
+    );
+  }, []);
+
   return (
-    <section id="about" className="py-20 bg-black">
+    <section id="about" className="py-20 bg-black section-three">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center font-futura" >
           <div>

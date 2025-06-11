@@ -1,7 +1,27 @@
-
 import { Card } from "@/components/ui/card";
+import { useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const Services = () => {
+
+  useEffect(() => {
+    gsap.fromTo(
+      '.section-two',
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 2,
+        scrollTrigger: {
+          trigger: '.section-two',
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
+      }
+    );
+  }, []);
+
   const services = [
     {
       title: "Corte Clássico",
@@ -27,7 +47,7 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="w-full h-screen px-8 text-white">
+    <section id="services" className="w-full h-screen px-8 text-white  section-two">
       <div className="mt-12 font-cormorant">
         <h1 className="text-8xl mb-20">SERVICES</h1>
       </div>

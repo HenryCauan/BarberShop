@@ -77,7 +77,7 @@ const Booking = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black font-futura">
       {/* Header */}
       <header className="bg-gray-900 border-b border-gold/20 p-4">
         <div className="container mx-auto flex items-center">
@@ -87,7 +87,7 @@ const Booking = () => {
               Voltar
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="text-2xl font-cormorant text-white">
             Agendar <span className="text-gold">Horário</span>
           </h1>
         </div>

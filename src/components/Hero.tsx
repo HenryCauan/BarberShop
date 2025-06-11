@@ -2,6 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface HeroProps {
   onOpenAuth: (mode: 'login' | 'register') => void;
@@ -10,8 +15,16 @@ interface HeroProps {
 const Hero = ({ onOpenAuth }: HeroProps) => {
   const { isAuthenticated } = useAuth();
 
+  useEffect(() => {
+    gsap.fromTo(
+      '#section-one',
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: 2 }
+    );
+  }, []);
+
   return (
-    <section className="">
+    <section className="" id="section-one">
       <div className="w-full h-screen flex flex-col bg-black justify-center items-center text-white font-futura">
         <span>Seja Bem-Vindo</span>
         <h1 className="text-8xl text-center font-cormorant">DESCUBRA NOSSOS <br/> SERVICOS</h1>
