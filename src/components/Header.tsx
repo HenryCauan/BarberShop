@@ -32,8 +32,7 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-                <span className="text-white">Olá, {user?.name}</span>
-                
+    
                 {user?.isAdmin ? (
                   <Link to="/admin">
                     <Button className="bg-gold hover:bg-gold/80 text-black">

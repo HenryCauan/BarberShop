@@ -79,7 +79,7 @@ const Booking = () => {
   return (
     <div className="min-h-screen bg-black font-futura">
       {/* Header */}
-      <header className="bg-gray-900 border-b border-gold/20 p-4">
+      <header className="bg-black border-b border-gold/20 p-4">
         <div className="container mx-auto flex items-center">
           <Link to="/">
             <Button variant="outline" size="sm" className="border-gold text-gold hover:bg-gold hover:text-black mr-4">
@@ -88,7 +88,7 @@ const Booking = () => {
             </Button>
           </Link>
           <h1 className="text-2xl font-cormorant text-white">
-            Agendar <span className="text-gold">Horário</span>
+            AGENDAR <span className="text-gold uppercase">Horário</span>
           </h1>
         </div>
       </header>
@@ -97,7 +97,7 @@ const Booking = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Serviços */}
-          <Card className="bg-gray-900/50 border-gold/20 p-6">
+          <Card className="bg-black border-gold/20 p-6">
             <h2 className="text-xl font-bold text-white mb-4 flex items-center">
               <User className="w-5 h-5 mr-2 text-gold" />
               Escolha o Serviço
@@ -126,7 +126,7 @@ const Booking = () => {
           </Card>
 
           {/* Data */}
-          <Card className="bg-gray-900/50 border-gold/20 p-6">
+          <Card className="bg-black border-gold/20 p-6">
             <h2 className="text-xl font-bold text-white mb-4">
               Escolha a Data
             </h2>
@@ -143,7 +143,7 @@ const Booking = () => {
           </Card>
 
           {/* Horário */}
-          <Card className="bg-gray-900/50 border-gold/20 p-6">
+          <Card className="bg-black border-gold/20 p-6">
             <h2 className="text-xl font-bold text-white mb-4 flex items-center">
               <Clock className="w-5 h-5 mr-2 text-gold" />
               Escolha o Horário
@@ -172,7 +172,7 @@ const Booking = () => {
         </div>
 
         {/* Resumo e Confirmação */}
-        <Card className="bg-gray-900/50 border-gold/20 p-6 mt-8">
+        <Card className="bg-black border-gold/20 p-6 mt-8">
           <h2 className="text-xl font-bold text-white mb-4">Resumo do Agendamento</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

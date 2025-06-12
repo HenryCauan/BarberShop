@@ -28,10 +28,10 @@ const Historico = () => {
     return (
         <div className="min-h-screen bg-black">
             {/* Header */}
-            <header className="bg-gray-900 border-b border-gold/20 p-4">
-                <div className="container mx-auto flex items-center">
-                    <Link to="/">
-                        <Button variant="outline" size="sm" className="border-gold text-gold hover:bg-gold hover:text-black mr-4">
+            <header className="bg-black border-b border-gold/20 p-4 font-cormorant uppercase">
+                <div className="container mx-auto flex items-center justify-center relative">
+                    <Link to="/" className="absolute left-0">
+                        <Button variant="outline" size="sm" className="border-gold bg-black text-white hover:bg-gold hover:text-black mr-4">
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             Voltar
                         </Button>
@@ -44,7 +44,7 @@ const Historico = () => {
 
             {/* Container do Histórico */}
             <div className="container mx-auto px-4 py-8">
-                <Card className="bg-gray-900/50 border-gold/20 p-6">
+                <Card className="bg-black border-gold/20 p-6">
                     <h2 className="text-xl font-bold text-white mb-6 flex items-center">
                         <CalendarIcon className="w-5 h-5 mr-2 text-gold" />
                         Seus Agendamentos

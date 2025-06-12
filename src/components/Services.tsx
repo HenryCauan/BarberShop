@@ -31,16 +31,16 @@ const Services = () => {
       image: "/image(11).png"
     },
     {
-      title: "Hidratação",
+      title: "Sobrancelha",
       description: "Tratamento premium para cabelos",
-      price: "R$ 40",
+      price: "R$ 15",
       duration: "25 min",
       image: "/image(9).png"
     },
     {
-      title: "Sobrancelha",
+      title: "Barba",
       description: "Design e acabamento masculino",
-      price: "R$ 15",
+      price: "R$ 45",
       duration: "15 min",
       image: "/image(8).png"
     },
