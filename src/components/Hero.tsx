@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useNavigate } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +15,7 @@ interface HeroProps {
 
 const Hero = ({ onOpenAuth }: HeroProps) => {
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     gsap.fromTo(
@@ -28,7 +30,12 @@ const Hero = ({ onOpenAuth }: HeroProps) => {
       <div className="w-full h-screen flex flex-col bg-black justify-center items-center text-white font-futura relative z-10">
         <span>Seja Bem-Vindo</span>
         <h1 className="md:text-8xl text-[14vw] text-center font-cormorant">DESCUBRA NOSSOS <br/> SERVICOS</h1>
-        <button className="relative top-12 px-6 py-2 border-2 border-white z-40">Agende Agora</button>
+        <button 
+          onClick={() => isAuthenticated ? navigate('/booking') : onOpenAuth('register')} 
+          className="relative top-12 px-6 py-2 border-2 border-white z-40 hover:bg-white hover:text-black transition-colors"
+        >
+          Agende Agora
+        </button>
       </div>
 
       <div className="">

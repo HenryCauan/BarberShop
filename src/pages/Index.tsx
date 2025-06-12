@@ -47,7 +47,7 @@ const Index = () => {
     <div className="min-h-screen bg-black">
       <Header onOpenAuth={openAuthModal} />
       <Hero onOpenAuth={openAuthModal} />
-      <Services />
+      <Services onOpenAuth={openAuthModal} />
       <About />
       <Gallery />
       <Contact />

@@ -2,8 +2,17 @@ import { Card } from "@/components/ui/card";
 import { useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const Services = () => {
+interface ServicesProps {
+  onOpenAuth: (mode: 'login' | 'register') => void;
+}
+
+const Services = ({ onOpenAuth }: ServicesProps) => {
+
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     gsap.fromTo(
@@ -57,7 +66,12 @@ const Services = () => {
             <img className="" src={service.image} alt="" />
             <h1 className="text-lg border-b border-white py-4">{service.title}</h1>
             <p className="py-8 text-lg">{service.price}</p>
-            <button className="px-6 py-2 border-2 border-white">Agendar</button>
+            <button 
+              onClick={() => isAuthenticated ? navigate('/booking') : onOpenAuth('register')} 
+              className="px-6 py-2 border-2 border-white hover:bg-white hover:text-black transition-colors"
+            >
+              Agendar
+            </button>
           </div>
         ))}
       </div>
