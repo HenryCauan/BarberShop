@@ -30,9 +30,9 @@ const Contact: React.FC = () => {
           <h1>Barbearia</h1>
           <h1>Entre em Contato <br />Conosco</h1>
         </div>
-        <div className="w-full h-full flex-1 px-8 flex md:flex-row flex-col justify-end items-center py-12 border-y-[1px] gap-32 font-futura">
+        <div className="w-full h-full flex-1 px-8 flex md:flex-row flex-col justify-end md:items-center py-12 border-y-[1px] gap-32 font-futura">
           <div className="relative flex flex-col gap-4">
-            <div className="flex md:flex-col">
+            <div className="flex flex-col">
               <span>(11) 3456-7890</span>
               <span>barbearia@meusite.com</span>
             </div>
