@@ -47,11 +47,11 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="w-full h-screen px-8 text-white  section-two">
+    <section id="services" className="w-full min-h-screen px-8 text-white  section-two">
       <div className="mt-12 font-cormorant">
         <h1 className="text-8xl mb-20">SERVICES</h1>
       </div>
-      <div className="w-full h-full flex gap-12 font-futura px-4">
+      <div className="w-full h-full flex md:flex-row flex-col gap-12 font-futura px-4">
         {services.map((service, index) => (
           <div className="h-2/3 flex flex-col border-[1px] p-4 border-white">
             <img className="" src={service.image} alt="" />

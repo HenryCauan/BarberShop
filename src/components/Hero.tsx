@@ -24,21 +24,21 @@ const Hero = ({ onOpenAuth }: HeroProps) => {
   }, []);
 
   return (
-    <section className="" id="section-one">
-      <div className="w-full h-screen flex flex-col bg-black justify-center items-center text-white font-futura">
+    <section className="relative z-0" id="section-one">
+      <div className="w-full h-screen flex flex-col bg-black justify-center items-center text-white font-futura relative z-10">
         <span>Seja Bem-Vindo</span>
-        <h1 className="text-8xl text-center font-cormorant">DESCUBRA NOSSOS <br/> SERVICOS</h1>
-        <button className="relative top-12 px-6 py-2 border-2 border-white">Agende Agora</button>
+        <h1 className="md:text-8xl text-[14vw] text-center font-cormorant">DESCUBRA NOSSOS <br/> SERVICOS</h1>
+        <button className="relative top-12 px-6 py-2 border-2 border-white z-40">Agende Agora</button>
       </div>
 
       <div className="">
-        <img className="absolute w-[18rem] top-36 right-8 z-20" src="/image.png" alt="" />
-        <img className="absolute w-[17rem] top-36 left-8 z-20" src="/image(6).png" alt="" />
-        <img className="absolute w-[20rem] bottom-24 right-[25rem] z-20" src="/image(3).png" alt="" />
+        <img className="absolute w-[30vw] md:w-[18vw] top-36 right-12 md:right-[8rem] z-20" src="/image.png" alt="" />
+        <img className="absolute w-[30vw] md:w-[17vw] top-36 left-8 z-20" src="/image(6).png" alt="" />
+        <img className="absolute w-[30vw] md:w-[20vw] bottom-24 right-12 md:right-[25rem] z-10" src="/image(3).png" alt="" />
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-30">
         <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
           <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
         </div>
