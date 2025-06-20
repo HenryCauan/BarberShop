@@ -54,7 +54,7 @@ const Contact: React.FC = () => {
           </div>
         </div>
         <div className="text-white bg-black font-futura">
-          <p className="absolute py-6 right-0  px-6">© 2035 by Barbearia. Powered and secured by Wix</p>
+          <p className="absolute md:py-6 right-0  px-6">© 2035 by Barbearia. Powered and secured by Wix</p>
         </div>
       </section>
     </>
