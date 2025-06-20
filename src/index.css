@@ -104,6 +104,7 @@
   }
 
   body {
+    overflow-x: hidden;
     cursor: none;
     @apply bg-background text-foreground;
   }

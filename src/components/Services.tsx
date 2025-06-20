@@ -58,7 +58,7 @@ const Services = ({ onOpenAuth }: ServicesProps) => {
   return (
     <section id="services" className="w-full min-h-screen px-8 text-white  section-two">
       <div className="mt-12 font-cormorant">
-        <h1 className="text-8xl mb-20">SERVICES</h1>
+        <h1 className="text-5xl md:text-8xl mb-20">SERVICES</h1>
       </div>
       <div className="w-full h-full flex md:flex-row flex-col gap-12 font-futura px-4">
         {services.map((service, index) => (
