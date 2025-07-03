@@ -14,25 +14,25 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
 
   return (
     <header className="fixed top-0 w-full bg-black/90 backdrop-blur-md z-50 font-cormorant">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo */}
           <div className="text-2xl font-bold text-gold">
-            Barber
+            <a href="#home">Barber</a>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          {/* Desktop Navigation (Centrada) */}
+          <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center space-x-8">
             <a href="#home" className="text-white hover:text-gold transition-colors">Início</a>
             <a href="#services" className="text-white hover:text-gold transition-colors">Serviços</a>
             <a href="#about" className="text-white hover:text-gold transition-colors">Sobre</a>
             <a href="#contact" className="text-white hover:text-gold transition-colors">Contato</a>
           </nav>
 
-          {/* Desktop Auth Buttons */}
+          {/* Desktop Auth & User Actions */}
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-    
                 {user?.isAdmin ? (
                   <Link to="/admin">
                     <Button className="bg-gold hover:bg-gold/80 text-black">
@@ -56,7 +56,6 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
                     </Link>
                   </div>
                 )}
-                
                 <Button variant="outline" onClick={logout} className="border-gold text-gold hover:bg-gold hover:text-black">
                   Sair
                 </Button>
@@ -89,35 +88,35 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu (Aprimorado) */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 py-4 border-t border-gold/20">
-            <nav className="flex flex-col space-y-4">
-              <a href="#home" className="text-white hover:text-gold transition-colors">Início</a>
-              <a href="#services" className="text-white hover:text-gold transition-colors">Serviços</a>
-              <a href="#about" className="text-white hover:text-gold transition-colors">Sobre</a>
-              <a href="#contact" className="text-white hover:text-gold transition-colors">Contato</a>
+          <div className="md:hidden absolute top-full left-0 w-full bg-black/95 shadow-lg py-4">
+            <nav className="flex flex-col items-center space-y-4">
+              <a href="#home" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gold transition-colors">Início</a>
+              <a href="#services" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gold transition-colors">Serviços</a>
+              <a href="#about" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gold transition-colors">Sobre</a>
+              <a href="#contact" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gold transition-colors">Contato</a>
               
+              <div className="w-full border-t border-gold/20 my-4"></div>
+
               {isAuthenticated ? (
-                <div className="flex flex-col space-y-2 pt-4">
-                  <span className="text-white">Olá, {user?.name}</span>
-                  
+                <div className="flex flex-col items-center space-y-4 w-full px-4">
                   {user?.isAdmin ? (
-                    <Link to="/admin">
+                    <Link to="/admin" className="w-full">
                       <Button className="w-full bg-gold hover:bg-gold/80 text-black">
                         <Settings className="w-4 h-4 mr-2" />
                         Admin
                       </Button>
                     </Link>
                   ) : (
-                    <div className="flex items-center space-x-4">
-                      <Link to="/booking">
+                    <div className="flex flex-col items-center space-y-4 w-full">
+                      <Link to="/booking" className="w-full">
                         <Button className="w-full bg-gold hover:bg-gold/80 text-black">
                           <Calendar className="w-4 h-4 mr-2" />
                           Agendar
                         </Button>
                       </Link>
-                      <Link to="/historico">
+                      <Link to="/historico" className="w-full">
                         <Button className="w-full bg-gold hover:bg-gold/80 text-black">
                           <History className="w-4 h-4 mr-2" />
                           Histórico
@@ -125,22 +124,21 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
                       </Link>
                     </div>
                   )}
-                  
                   <Button variant="outline" onClick={logout} className="w-full border-gold text-gold hover:bg-gold hover:text-black">
                     Sair
                   </Button>
                 </div>
               ) : (
-                <div className="flex flex-col space-y-2 pt-4">
+                <div className="flex flex-col items-center space-y-4 w-full px-4">
                   <Button 
                     variant="outline" 
-                    onClick={() => onOpenAuth('login')}
-                    className="w-full border-gold text-gold hover:bg-gold hover:text-black"
+                    onClick={() => { onOpenAuth('login'); setIsMenuOpen(false); }}
+                    className="w-full border-white text-white bg-black hover:bg-white hover:text-black"
                   >
                     Entrar
                   </Button>
                   <Button 
-                    onClick={() => onOpenAuth('register')}
+                    onClick={() => { onOpenAuth('register'); setIsMenuOpen(false); }}
                     className="w-full bg-gold hover:bg-gold/80 text-black"
                   >
                     Cadastrar

@@ -25,7 +25,7 @@ const Contact: React.FC = () => {
 
   return (
     <>
-      <section className="w-full min-h-screen md:min-h-[50vh] grid md:grid-cols-2 grid-cols-1 text-white px-6 py-12 mt-12 section-four">
+      <section id="contact" className="w-full min-h-screen md:min-h-[50vh] grid md:grid-cols-2 grid-cols-1 text-white px-6 py-12 mt-12 section-four">
         <div className="w-full h-full flex-1 px-8 flex flex-col justify-between py-12 border-y-[1px] md:border-r-[1px] font-cormorant text-5xl">
           <h1>Barbearia</h1>
           <h1>Entre em Contato <br />Conosco</h1>

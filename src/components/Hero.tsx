@@ -26,8 +26,8 @@ const Hero = ({ onOpenAuth }: HeroProps) => {
   }, []);
 
   return (
-    <section className="relative z-0" id="section-one">
-      <div className="w-full h-screen flex flex-col bg-black justify-center items-center text-white font-futura relative z-10">
+    <section className="relative z-0" id="home">
+      <div className="w-full h-screen flex flex-col bg-transparent justify-center items-center text-white font-futura relative z-50">
         <span>Seja Bem-Vindo</span>
         <h1 className="md:text-8xl text-[14vw] text-center font-cormorant">DESCUBRA NOSSOS <br/> SERVICOS</h1>
         <button 

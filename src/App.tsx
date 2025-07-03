@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +9,7 @@ import Booking from "./pages/Booking";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Historico from "./pages/Historico";
+import ResetPassword from "./components/ResetPassword";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +25,7 @@ const App = () => (
             <Route path="/booking" element={<Booking />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/historico" element={<Historico />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

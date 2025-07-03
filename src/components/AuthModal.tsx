@@ -140,6 +140,7 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
           description: "Email e senha são obrigatórios",
           variant: "destructive"
         });
+        setIsSubmitting(false);
         return;
       }
 
@@ -159,6 +160,7 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
 
         setFormData({ name: '', phone: '', email: '', password: '' });
         onClose();
+        setIsSubmitting(false);
         return;
       }
 
@@ -173,10 +175,9 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
           if (loginError.message.includes("Email not confirmed")) {
             toast({
               title: "E-mail não confirmado",
-              description: "Por favor, verifique seu e-mail e confirme sua conta antes de fazer login.",
-              variant: "destructive",
-              action: (
+              description: (
                 <div className="flex flex-col space-y-2">
+                  <p>Por favor, verifique seu e-mail e confirme sua conta antes de fazer login.</p>
                   <Button
                     variant="ghost"
                     onClick={() => handleResendConfirmationEmail(formData.email)}
@@ -186,10 +187,12 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
                   </Button>
                 </div>
               ),
+              variant: "destructive",
             });
           } else {
             throw new Error(loginError.message);
           }
+          setIsSubmitting(false);
           return;
         }
 
@@ -216,6 +219,7 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
 
         setFormData({ name: '', phone: '', email: '', password: '' });
         onClose();
+        setIsSubmitting(false);
 
       } catch (error: any) {
         toast({
@@ -223,6 +227,7 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
           description: error.message,
           variant: "destructive"
         });
+        setIsSubmitting(false);
       }
     }
   };
@@ -265,7 +270,7 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
 
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(formData.email, {
-        redirectTo: "http://localhost:3000/reset-password", // Substitua pela URL da sua página de redefinição
+        redirectTo: `${window.location.origin}/reset-password`,
       });
 
       if (error) throw error;
@@ -377,16 +382,22 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
           </div>
 
           {mode === 'login' && (
-            <div className="text-center">
-              <Button
-                type="button"
-                variant="link"
-                onClick={handleForgotPassword}
-                className="text-gold hover:text-gold/80"
-              >
-                Esqueci minha senha
-              </Button>
-            </div>
+            <>
+              <div className="text-xs text-center text-gray-400 -mt-2">
+                <p>Admin Email: admin@barbershop.com</p>
+                <p>Admin Senha: admin</p>
+              </div>
+              <div className="text-center">
+                <Button
+                  type="button"
+                  variant="link"
+                  onClick={handleForgotPassword}
+                  className="text-gold hover:text-gold/80"
+                >
+                  Esqueci minha senha
+                </Button>
+              </div>
+            </>
           )}
 
           <Button 

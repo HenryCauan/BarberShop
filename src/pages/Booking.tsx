@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Clock, User } from "lucide-react";
+import { ArrowLeft, Clock, User, Scissors, Calendar as CalendarIcon, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -63,8 +63,8 @@ const Booking = () => {
     const updatedAppointments = [...existingAppointments, newAppointment];
     localStorage.setItem('adminAppointments', JSON.stringify(updatedAppointments));
 
-    const socket = io('URL_DO_SEU_SERVIDOR_WEBSOCKET');
-    socket.emit('newAppointment', newAppointment);
+    // const socket = io('URL_DO_SEU_SERVIDOR_WEBSOCKET');
+    // socket.emit('newAppointment', newAppointment);
 
     toast({
       title: "Aguarde a confirmação do proprietário",
@@ -72,138 +72,142 @@ const Booking = () => {
     });
   };
 
-  const confirmAppointment = (time: string) => {
-    setConfirmedAppointments([...confirmedAppointments, time]);
-  };
-
   return (
-    <div className="min-h-screen bg-black font-futura">
+    <div className="min-h-screen bg-black font-futura text-white">
       {/* Header */}
-      <header className="bg-gray-900/50 border-b border-gold/20 p-4">
-        <div className="container mx-auto flex items-center">
+      <header className="bg-black border-b border-[#aa8c2c] p-4 sticky top-0 z-10">
+        <div className="container mx-auto flex items-center justify-between">
           <Link to="/">
-            <Button variant="outline" size="sm" className="border-gold text-gold hover:bg-gold hover:text-black mr-4">
+            <Button variant="outline" size="sm" className="border-[#aa8c2c] text-[#aa8c2c] hover:bg-[#aa8c2c] hover:text-black">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Voltar
             </Button>
           </Link>
-          <h1 className="text-2xl font-cormorant text-white">
-            AGENDAR <span className="text-gold uppercase">Horário</span>
+          <h1 className="text-3xl font-cormorant text-white uppercase tracking-widest">
+            Agendar <span className="text-[#aa8c2c]">Horário</span>
           </h1>
+          <div className="w-24"></div> {/* Espaço para centralizar o título */}
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Serviços */}
-          <Card className="bg-gray-900/50 border-gold/20 p-6">
-            <h2 className="text-xl font-bold text-white mb-4 flex items-center">
-              <User className="w-5 h-5 mr-2 text-gold" />
-              Escolha o Serviço
+          {/* Coluna 1: Serviços */}
+          <Card className="bg-black border border-[#aa8c2c] p-6 rounded-lg shadow-lg shadow-[#aa8c2c]/10">
+            <h2 className="text-2xl font-cormorant text-white pb-4 flex items-center">
+              <Scissors className="w-6 h-6 mr-3" />
+              1. Escolha o Serviço
             </h2>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {services.map((service) => (
                 <div
                   key={service.id}
-                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
+                  className={`p-4 rounded-md border-2 cursor-pointer transition-all duration-300 flex justify-between items-center ${ 
                     selectedService === service.id
-                      ? 'border-gold bg-gold/10'
-                      : 'border-gray-700 hover:border-gold/50'
+                      ? 'border-[#aa8c2c] bg-[#aa8c2c]/10'
+                      : 'border-gray-700 hover:border-[#aa8c2c]/50'
                   }`}
                   onClick={() => setSelectedService(service.id)}
                 >
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="text-white font-semibold">{service.name}</h3>
-                      <p className="text-gray-400 text-sm">{service.duration}</p>
-                    </div>
-                    <span className="text-gold font-bold">{service.price}</span>
+                  <div>
+                    <h3 className="text-white font-semibold text-lg">{service.name}</h3>
+                    <p className="text-gray-400 text-sm">{service.duration}</p>
                   </div>
+                  <span className="text-[#aa8c2c] font-bold text-lg">{service.price}</span>
                 </div>
               ))}
             </div>
           </Card>
 
-          {/* Data */}
-          <Card className="bg-gray-900/50 border-gold/20 p-6">
-            <h2 className="text-xl font-bold text-white mb-4">
-              Escolha a Data
-            </h2>
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={setSelectedDate}
-              disabled={(date) => date < new Date() || date.getDay() === 0}
-              className="rounded-md text-white"
-            />
-            <p className="text-gray-400 text-sm mt-4">
-              * Fechado aos domingos
-            </p>
-          </Card>
-
-          {/* Horário */}
-          <Card className="bg-gray-900/50 border-gold/20 p-6">
-            <h2 className="text-xl font-bold text-white mb-4 flex items-center">
-              <Clock className="w-5 h-5 mr-2 text-gold" />
-              Escolha o Horário
-            </h2>
-            <div className="grid grid-cols-2 gap-2">
-              {timeSlots.map((time) => (
-                <Button
-                  key={time}
-                  variant={selectedTime === time ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => !isTimeSlotConfirmed(time) && setSelectedTime(time)}
-                  className={
-                    isTimeSlotConfirmed(time)
-                      ? "bg-red-500 text-white cursor-not-allowed"
-                      : selectedTime === time
-                      ? "bg-gold text-black hover:bg-gold/80"
-                      : "border-gray-700 text-black hover:border-gold hover:text-gold"
-                  }
-                  disabled={isTimeSlotConfirmed(time)}
-                >
-                  {time}
-                </Button>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-        {/* Resumo e Confirmação */}
-        <Card className="bg-gray-900/50 border-gold/20 p-6 mt-8">
-          <h2 className="text-xl font-bold text-white mb-4">Resumo do Agendamento</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div>
-              <Label className="text-gray-400">Serviço</Label>
-              <p className="text-white font-semibold">
-                {selectedService ? services.find(s => s.id === selectedService)?.name : 'Não selecionado'}
+          {/* Coluna 2: Data e Horário */}
+          <div className="space-y-8">
+            <Card className="bg-black border border-[#aa8c2c] p-6 rounded-lg shadow-lg shadow-[#aa8c2c]/10">
+              <h2 className="text-2xl font-cormorant text-white mb-4 flex items-center">
+                <CalendarIcon className="w-6 h-6 mr-3" />
+                2. Escolha a Data
+              </h2>
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() - 1)) || date.getDay() === 0}
+                className="rounded-md text-white bg-black p-0"
+              />
+              <p className="text-gray-400 text-sm mt-4">
+                * Não abrimos aos domingos.
               </p>
-            </div>
-            <div>
-              <Label className="text-gray-400">Data</Label>
-              <p className="text-white font-semibold">
-                {selectedDate ? selectedDate.toLocaleDateString('pt-BR') : 'Não selecionada'}
-              </p>
-            </div>
-            <div>
-              <Label className="text-gray-400">Horário</Label>
-              <p className="text-white font-semibold">
-                {selectedTime || 'Não selecionado'}
-              </p>
-            </div>
+            </Card>
+            <Card className="bg-black border border-[#aa8c2c] p-6 rounded-lg shadow-lg shadow-[#aa8c2c]/10">
+              <h2 className="text-2xl font-cormorant text-white mb-6 flex items-center">
+                <Clock className="w-6 h-6 mr-3" />
+                3. Escolha o Horário
+              </h2>
+              <div className="grid grid-cols-3 gap-3">
+                {timeSlots.map((time) => (
+                  <Button
+                    key={time}
+                    variant={selectedTime === time ? "default" : "outline"}
+                    onClick={() => !isTimeSlotConfirmed(time) && setSelectedTime(time)}
+                    className={`py-6 text-lg transition-all duration-300 ${ 
+                      isTimeSlotConfirmed(time)
+                        ? "bg-red-800 text-white/50 cursor-not-allowed line-through"
+                        : selectedTime === time
+                        ? "bg-[#aa8c2c] text-black hover:bg-[#aa8c2c]/90"
+                        : "border-gray-600 bg-gray-800 text-white hover:border-[#aa8c2c] hover:text-[#aa8c2c]"
+                    }`}
+                    disabled={isTimeSlotConfirmed(time)}
+                  >
+                    {time}
+                  </Button>
+                ))}
+              </div>
+            </Card>
           </div>
 
-          <Button 
-            onClick={handleBooking}
-            className="w-full bg-gold hover:bg-gold/80 text-black font-semibold text-lg py-3"
-            disabled={!selectedDate || !selectedTime || !selectedService}
-          >
-            Confirmar Agendamento
-          </Button>
-        </Card>
+          {/* Coluna 3: Resumo e Confirmação */}
+          <Card className="bg-black border border-[#aa8c2c] p-6 rounded-lg shadow-lg shadow-[#aa8c2c]/10 lg:sticky lg:top-28">
+            <h2 className="text-2xl font-cormorant text-white mb-6 flex items-center">
+              <CheckCircle className="w-6 h-6 mr-3" />
+              Resumo do Agendamento
+            </h2>
+            
+            <div className="space-y-6 mb-8">
+              <div className="flex justify-between items-center border-b border-gray-700 pb-2">
+                <Label className="text-gray-400">Serviço:</Label>
+                <p className="text-white font-semibold text-right">
+                  {selectedService ? services.find(s => s.id === selectedService)?.name : 'N/A'}
+                </p>
+              </div>
+              <div className="flex justify-between items-center border-b border-gray-700 pb-2">
+                <Label className="text-gray-400">Data:</Label>
+                <p className="text-white font-semibold">
+                  {selectedDate ? selectedDate.toLocaleDateString('pt-BR') : 'N/A'}
+                </p>
+              </div>
+              <div className="flex justify-between items-center border-b border-gray-700 pb-2">
+                <Label className="text-gray-400">Horário:</Label>
+                <p className="text-white font-semibold">
+                  {selectedTime || 'N/A'}
+                </p>
+              </div>
+              <div className="flex justify-between items-center pt-4">
+                <Label className="text-xl font-cormorant text-white">Total:</Label>
+                <p className="text-2xl font-bold text-[#aa8c2c]">
+                  {selectedService ? services.find(s => s.id === selectedService)?.price : 'R$ 0'}
+                </p>
+              </div>
+            </div>
+
+            <Button 
+              onClick={handleBooking}
+              className="w-full bg-[#aa8c2c] hover:bg-[#aa8c2c]/90 text-black font-bold text-lg py-7 rounded-lg transition-all duration-300 shadow-lg shadow-[#aa8c2c]/20 disabled:bg-gray-600 disabled:cursor-not-allowed"
+              disabled={!selectedDate || !selectedTime || !selectedService}
+            >
+              Confirmar Agendamento
+            </Button>
+          </Card>
+        </div>
       </div>
     </div>
   );

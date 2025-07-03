@@ -56,8 +56,8 @@ const Services = ({ onOpenAuth }: ServicesProps) => {
   ];
 
   return (
-    <section id="services" className="w-full min-h-screen px-8 text-white  section-two">
-      <div className="mt-12 font-cormorant">
+    <section id="services" className="w-full min-h-screen md:px-8 px-2 text-white  section-two">
+      <div className="px-2 mt-12 font-cormorant">
         <h1 className="text-5xl md:text-8xl mb-20">SERVICES</h1>
       </div>
       <div className="w-full h-full flex md:flex-row flex-col gap-12 font-futura px-4">

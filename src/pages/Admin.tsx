@@ -141,7 +141,6 @@ const Admin = () => {
             </h1>
           </div>
           <div className="flex items-center space-x-4">
-            <span className="text-white">Olá, {user.name}</span>
             <Button variant="outline" onClick={logout} className="border-gold text-gold hover:bg-gold hover:text-black">
               Sair
             </Button>

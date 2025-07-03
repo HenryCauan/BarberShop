@@ -36,7 +36,7 @@ const Gallery = () => {
         <div className="w-full text-center text-7xl font-cormorant py-12 border-y-[1px] border-gray-500 mb-14">
           GALERIA
         </div>
-        <div className="w-full max-h-[200vh] grid grid-cols-5 grid-rows-12 gap-8 px-12">
+        <div className="w-full max-h-[200vh] grid grid-cols-5 grid-rows-12 gap-8 px-2 md:px-12">
           <div className="col-span-5 row-span-3 overflow-hidden">
             <img
               src="/barba-de-corte-de-homem-bonito-em-um-salao-de-barbeiro.jpg"
@@ -72,7 +72,7 @@ const Gallery = () => {
               className="w-full h-full object-cover gallery-img"
             />
           </div>
-          <div className="col-span-2 row-span-3 row-start-10 overflow-hidden">
+          <div className="col-span-3 md:col-span-2 row-span-3 row-start-10 overflow-hidden">
             <img
               src="/cortando2.jpeg"
               alt="Galeria 6"
@@ -86,7 +86,7 @@ const Gallery = () => {
               className="w-full h-full object-cover gallery-img"
             />
           </div>
-          <div className="row-span-3 col-start-3 row-start-10 overflow-hidden">
+          <div className="row-span-3 col-start-3 row-start-10 overflow-hidden md:visible hidden">
             <img
               src="/pretocortado.jpeg"
               alt="Galeria 8"
