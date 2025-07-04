@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Calendar as CalendarIcon, List, Clock, User, Phone, CheckCircle, XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -182,12 +181,6 @@ const Admin = () => {
 
               <div>
                 <Label className="text-white mb-2 block">Filtrar por Data</Label>
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  className="rounded-md text-white"
-                />
               </div>
             </div>
           </Card>

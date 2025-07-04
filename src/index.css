@@ -1,10 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap');
 
-@font-face {
-  font-family: 'Futura';
-  src: url(../src/assets/Evolventa-Regular.otf);
-}
+
 
 @tailwind base;
 @tailwind components;
@@ -108,5 +105,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Estilos para o calendário */
+.selected-day {
+  border-radius: 50%;
+  transition: all 1s;
+  background-color: white !important;
+  color: black !important;
+}
+
+.today-day {
+  color: #aa8c2c !important;
+  font-weight: bold !important;
+}
+
+/* Força a cor branca nos botões e setas do calendário */
+polygon {
+  fill: white !important;
+  stroke: white !important;
+}
+
 
 

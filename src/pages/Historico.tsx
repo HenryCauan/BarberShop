@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar } from "@/components/ui/calendar";
+
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Clock, User, Calendar as CalendarIcon, Scissors } from "lucide-react";
 import { Link } from "react-router-dom";

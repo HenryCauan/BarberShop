@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Gallery from "@/components/Gallery";
 import Lenis from "@studio-freight/lenis";
 
-const Index = () => {
+const Index: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const { login } = useAuth();
@@ -20,6 +20,10 @@ const Index = () => {
       duration: 1.2, // Duração da animação de rolagem (em segundos)
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Curva de easing
       smooth: true, // Ativa a rolagem suave
+    } as {
+      duration: number;
+      easing: (t: number) => number;
+      smooth: boolean;
     });
 
     function raf(time: number) {
