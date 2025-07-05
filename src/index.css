@@ -102,7 +102,7 @@
 
   body {
     overflow-x: hidden;
-    @apply bg-background text-foreground;
+    background-color: black;
   }
 }
 
