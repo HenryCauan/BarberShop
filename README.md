@@ -50,3 +50,7 @@ npm install
 
 # Inicie o servidor de desenvolvimento
 npm run dev
+```
+
+🧠 Autor
+Feito com dedicação por Henry Cauan 🧔
