@@ -30,7 +30,7 @@ Para configurar e executar o projeto localmente, siga os passos abaixo:
 
 Certifique-se de ter o Node.js e o npm (ou Yarn) instalados em sua máquina.
 
-### Preview
+## Preview
 
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/8fd1e753-9c7d-46da-925f-ea4a81c07120" />
 
