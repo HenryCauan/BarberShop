@@ -1,8 +1,8 @@
 {
   "build": {
     "env": {
-      "VITE_SUPABASE_URL": "url_do_supabase",
-      "VITE_SUPABASE_ANON_KEY": "chave_anonima"
+      "VITE_SUPABASE_URL": "https://zudljrtlvjetrvdeqdbo.supabase.co",
+      "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1ZGxqcnRsdmpldHJ2ZGVxZGJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NDI2MzYsImV4cCI6MjA2NDExODYzNn0.ILZGIKSMhiXOfmMQIy4X2QA4N7Pp0FVcvx8LntRqhtM"
     }
   }
 }
