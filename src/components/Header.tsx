@@ -26,6 +26,7 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
             <a href="#home" className="text-white hover:text-gold transition-colors">Início</a>
             <a href="#services" className="text-white hover:text-gold transition-colors">Serviços</a>
             <a href="#about" className="text-white hover:text-gold transition-colors">Sobre</a>
+            <a href="#galeria" className="text-white hover:text-gold transition-colors">Galeria</a>
             <a href="#contact" className="text-white hover:text-gold transition-colors">Contato</a>
           </nav>
 

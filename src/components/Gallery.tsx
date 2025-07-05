@@ -22,6 +22,8 @@ const Gallery = () => {
           trigger: galleryElement,
           start: "top 80%",
           toggleActions: "play none none none",
+          markers: false,
+          scrub: false,
         },
       });
 
@@ -41,7 +43,7 @@ const Gallery = () => {
 
   return (
     <>
-      <section className="w-full min-h-screen bg-black flex flex-col justify-center items-center text-white py-12 overflow-x-hidden">
+      <section id="galeria" className="w-full min-h-screen bg-black flex flex-col justify-center items-center text-white py-12 overflow-x-hidden">
         <div className="w-full text-center text-7xl font-cormorant py-12 border-y-[1px] border-gray-500 mb-14">
           GALERIA
         </div>

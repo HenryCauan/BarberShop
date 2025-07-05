@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Clock, User, Calendar as CalendarIcon, Scissors } from "lucide-react";
+import { ArrowLeft, Clock, User, Calendar as CalendarIcon, Scissors, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
@@ -16,39 +16,70 @@ const Historico = () => {
 
     // Atualizar quando o localStorage mudar
     useEffect(() => {
-        const handleStorageChange = () => {
-            const savedAppointments = localStorage.getItem('appointments');
-            setAppointments(savedAppointments ? JSON.parse(savedAppointments) : []);
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === 'appointments') {
+                setAppointments(e.newValue ? JSON.parse(e.newValue) : []);
+            }
         };
 
         window.addEventListener('storage', handleStorageChange);
         return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
 
+    useEffect(() => {
+        console.log("Agendamentos no localStorage:", localStorage.getItem('appointments'));
+        console.log("Agendamentos no estado:", appointments);
+    }, [appointments]);
+
+    const handleClearAppointments = () => {
+        if (window.confirm("Tem certeza que deseja limpar todos os agendamentos?")) {
+            localStorage.removeItem('appointments');
+            setAppointments([]);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-black">
             {/* Header */}
             <header className="bg-black border-b border-gold/20 p-4 font-cormorant uppercase">
-                <div className="container mx-auto flex items-center justify-center relative">
-                    <Link to="/" className="absolute left-0">
-                        <Button variant="outline" size="sm" className="border-gold bg-black text-white hover:bg-gold hover:text-black mr-4">
+                <div className="container mx-auto flex items-center justify-between relative">
+                    <Link to="/" className="flex-shrink-0">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="border-gold bg-black text-white hover:bg-gold hover:text-black"
+                        >
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             Voltar
                         </Button>
                     </Link>
-                    <h1 className="text-2xl font-bold text-white">
+                    <h1 className="text-xl md:text-2xl font-bold text-white text-center flex-grow px-4">
                         Histórico de <span className="text-gold">Agendamentos</span>
                     </h1>
+                    <div className="flex-shrink-0 w-24"></div>
                 </div>
             </header>
 
             {/* Container do Histórico */}
             <div className="container mx-auto px-4 py-8">
                 <Card className="bg-black border-gold/20 p-6">
-                    <h2 className="text-xl font-bold text-white mb-6 flex items-center">
-                        <CalendarIcon className="w-5 h-5 mr-2 text-gold" />
-                        Seus Agendamentos
-                    </h2>
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-xl font-bold text-white flex items-center">
+                            <CalendarIcon className="w-5 h-5 mr-2 text-gold" />
+                            Seus Agendamentos
+                        </h2>
+                        {appointments.length > 0 && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleClearAppointments}
+                                className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                            >
+                                <span className="hidden md:inline">Limpar Tudo</span>
+                                <Trash2 className="w-4 h-4 md:hidden" />
+                            </Button>
+                        )}
+                    </div>
 
                     {appointments.length === 0 ? (
                         <div className="flex flex-col items-center justify-center h-64">
@@ -81,12 +112,12 @@ const Historico = () => {
                                                 className={`px-2 py-1 rounded-full text-xs font-semibold ${
                                                     appointment.status === "pending" 
                                                         ? "bg-yellow-500/20 text-yellow-400" 
-                                                        : appointment.status === "Concluído" 
+                                                        : appointment.status === "confirmed" 
                                                             ? "bg-green-500/20 text-green-400" 
                                                             : "bg-red-500/20 text-red-400"
                                                 }`}
                                             >
-                                                {appointment.status === "pending" ? "Pendente" : appointment.status}
+                                                {appointment.status === "pending" ? "Pendente" : appointment.status === "confirmed" ? "Confirmado" : "Cancelado"}
                                             </span>
                                         </div>
                                     </div>

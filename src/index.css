@@ -127,3 +127,6 @@ polygon {
 
 
 
+.gallery-img {
+  will-change: transform, opacity;
+}

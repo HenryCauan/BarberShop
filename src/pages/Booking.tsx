@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Clock, Scissors, Calendar as CalendarIcon, CheckCircle, User, ChevronRight, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import DatePicker from "react-datepicker";
@@ -18,6 +18,7 @@ const Booking = () => {
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [selectedService, setSelectedService] = useState<string>('');
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const services = [
     { id: 'corte', name: 'Corte Clássico', price: 'R$ 35', duration: '30 min', icon: <Scissors className="w-8 h-8 text-[#aa8c2c]" /> },
@@ -42,7 +43,47 @@ const Booking = () => {
       toast({ title: "Dados incompletos", description: "Por favor, preencha todas as informações.", variant: "destructive" });
       return;
     }
-    toast({ title: "Agendamento solicitado!", description: `Seu horário para ${selectedDate.toLocaleDateString('pt-BR')} às ${selectedTime} foi solicitado.` });
+
+    // Criar o objeto do agendamento
+    const newAppointment = {
+      id: Date.now().toString(),
+      clientName: user?.name || "Cliente Anônimo",
+      clientPhone: user?.phone || "Não informado",
+      service: services.find(s => s.id === selectedService)?.name || "",
+      date: selectedDate.toISOString().split('T')[0], // Formato YYYY-MM-DD
+      time: selectedTime,
+      status: "pending" as const,
+    };
+
+    // Salvar em ambas as chaves para sincronização
+    const savedUserAppointments = localStorage.getItem('appointments');
+    const userAppointments = savedUserAppointments ? JSON.parse(savedUserAppointments) : [];
+    localStorage.setItem('appointments', JSON.stringify([...userAppointments, newAppointment]));
+
+    const savedAdminAppointments = localStorage.getItem('adminAppointments');
+    const adminAppointments = savedAdminAppointments ? JSON.parse(savedAdminAppointments) : [];
+    localStorage.setItem('adminAppointments', JSON.stringify([...adminAppointments, newAppointment]));
+
+    // Notificar o usuário
+    toast({ 
+      title: "Agendamento solicitado!", 
+      description: `Seu horário para ${newAppointment.date} às ${newAppointment.time} foi solicitado. Aguarde confirmação.` 
+    });
+
+    // Redirecionar para a página inicial após 2 segundos
+    setTimeout(() => {
+      navigate("/");
+    }, 2000);
+  };
+
+  const getBookedTimes = (date: Date | undefined) => {
+    if (!date) return [];
+    const dateStr = date.toISOString().split('T')[0];
+    const savedAppointments = localStorage.getItem('appointments');
+    const appointments = savedAppointments ? JSON.parse(savedAppointments) : [];
+    return appointments
+      .filter((apt: any) => apt.date === dateStr)
+      .map((apt: any) => apt.time);
   };
 
   const renderStep = () => {
@@ -71,55 +112,66 @@ const Booking = () => {
     </div>
   );
 
-  const DateTimeStep = () => (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <Card className="bg-black border-2 border-[#aa8c2c]/30 p-6 rounded-xl shadow-lg shadow-[#aa8c2c]/10 flex flex-col items-center">
-        <div className="flex items-center mb-6 w-full justify-center">
-          <CalendarIcon className="w-8 h-8 text-[#aa8c2c] mr-3" />
-          <h2 className="text-2xl font-cormorant text-[#aa8c2c]">Escolha a Data</h2>
-        </div>
+  const DateTimeStep = () => {
+    const bookedTimes = getBookedTimes(selectedDate);
 
-        <CustomCalendar
-          selected={selectedDate}
-          onSelect={setSelectedDate}
-        />
-
-        <div className="mt-6 flex items-center justify-center space-x-4 w-full">
-          <div className="flex items-center">
-            <div className="w-3 h-3 rounded-full bg-[#aa8c2c] mr-2"></div>
-            <span className="text-sm text-white">Disponível</span>
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card className="bg-black border-2 border-[#aa8c2c]/30 p-6 rounded-xl shadow-lg shadow-[#aa8c2c]/10 flex flex-col items-center">
+          <div className="flex items-center mb-6 w-full justify-center">
+            <CalendarIcon className="w-8 h-8 text-[#aa8c2c] mr-3" />
+            <h2 className="text-2xl font-cormorant text-[#aa8c2c]">Escolha a Data</h2>
           </div>
-          <div className="flex items-center">
-            <div className="w-3 h-3 rounded-full bg-gray-600 mr-2"></div>
-            <span className="text-sm text-gray-400">Indisponível</span>
-          </div>
-        </div>
-      </Card>
 
-      <Card className="bg-black border border-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-cormorant text-white mb-6 flex items-center">
-          <Clock className="w-6 h-6 mr-3 text-[#aa8c2c]" />
-          Escolha o Horário
-        </h2>
-        <div className="grid grid-cols-3 gap-3">
-          {timeSlots.map((time) => (
-            <Button
-              key={time}
-              variant={selectedTime === time ? "default" : "outline"}
-              onClick={() => setSelectedTime(time)}
-              className={`py-6 text-lg transition-all duration-300 ${ 
-                selectedTime === time
-                  ? "bg-[#aa8c2c] text-black hover:bg-[#aa8c2c]/90"
-                  : "border-gray-600 bg-gray-800 text-white hover:border-[#aa8c2c] hover:text-[#aa8c2c]"
-              }`}
-            >
-              {time}
-            </Button>
-          ))}
-        </div>
-      </Card>
-    </div>
-  );
+          <CustomCalendar
+            selected={selectedDate}
+            onSelect={setSelectedDate}
+          />
+
+          <div className="mt-6 flex items-center justify-center space-x-4 w-full">
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full bg-[#aa8c2c] mr-2"></div>
+              <span className="text-sm text-white">Disponível</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full bg-gray-600 mr-2"></div>
+              <span className="text-sm text-gray-400">Indisponível</span>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="bg-black border border-gray-800 p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-cormorant text-white mb-6 flex items-center">
+            <Clock className="w-6 h-6 mr-3 text-[#aa8c2c]" />
+            Escolha o Horário
+          </h2>
+          <div className="grid grid-cols-3 gap-3">
+            {timeSlots.map((time) => {
+              const isBooked = bookedTimes.includes(time);
+              return (
+                <Button
+                  key={time}
+                  variant={isBooked ? "ghost" : selectedTime === time ? "default" : "outline"}
+                  onClick={() => !isBooked && setSelectedTime(time)}
+                  disabled={isBooked}
+                  className={`py-6 text-lg transition-all duration-300 ${
+                    isBooked
+                      ? "bg-gray-900 text-gray-600 cursor-not-allowed"
+                      : selectedTime === time
+                      ? "bg-[#aa8c2c] text-black hover:bg-[#aa8c2c]/90"
+                      : "border-gray-600 bg-gray-800 text-white hover:border-[#aa8c2c] hover:text-[#aa8c2c]"
+                  }`}
+                >
+                  {time}
+                  {isBooked && <span className="ml-2 text-xs">(Ocupado)</span>}
+                </Button>
+              );
+            })}
+          </div>
+        </Card>
+      </div>
+    );
+  };
 
   const ConfirmationStep = () => (
     <Card className="bg-black border border-[#aa8c2c] p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
@@ -150,7 +202,28 @@ const Booking = () => {
     <div className="min-h-screen bg-black font-futura text-white">
       <header className="bg-black border-b border-[#aa8c2c] p-4 sticky top-0 z-10">
         <div className="container mx-auto flex items-center justify-between">
-          {step > 1 ? <Button variant="outline" size="sm" onClick={handlePrevStep} className="border-white text-white hover:bg-white hover:text-black"><ArrowLeft className="w-4 h-4 mr-2" />Voltar</Button> : <Link to="/"><Button variant="outline" size="sm" className="border-white text-white hover:bg-white hover:text-black"><ArrowLeft className="w-4 h-4 mr-2" />Início</Button></Link>}
+          {step > 1 ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePrevStep}
+              className="border-gold bg-black text-white hover:bg-gold hover:text-black mr-4"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar
+            </Button>
+          ) : (
+            <Link to="/">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-gold bg-black text-white hover:bg-gold hover:text-black mr-4"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Início
+              </Button>
+            </Link>
+          )}
           <h1 className="text-3xl font-cormorant text-white uppercase tracking-widest">Agendar Horário</h1>
           <div className="w-24 flex items-center justify-end space-x-2">
             {[1, 2, 3].map(s => <div key={s} className={`w-3 h-3 rounded-full transition-all duration-300 ${step === s ? 'bg-[#aa8c2c]' : 'bg-gray-600'}`}></div>)}

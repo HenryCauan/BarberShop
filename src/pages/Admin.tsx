@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Calendar as CalendarIcon, List, Clock, User, Phone, CheckCircle, XCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowLeft, Calendar as CalendarIcon, List, Clock, User, Phone, CheckCircle, XCircle, RefreshCw } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { io } from "socket.io-client";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface Appointment {
   id: string;
@@ -24,6 +26,7 @@ const Admin = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('list');
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const navigate = useNavigate();
 
   // Carregar agendamentos do localStorage
   useEffect(() => {
@@ -55,12 +58,35 @@ const Admin = () => {
   });
 
   const handleStatusChange = (appointmentId: string, newStatus: 'confirmed' | 'cancelled') => {
-    setAppointments(prev => 
-      prev.map(apt => 
-        apt.id === appointmentId ? { ...apt, status: newStatus } : apt
-      )
-    );
+    const updatedAppointments = appointments.map(apt => {
+      if (apt.id === appointmentId) {
+        const updated = { ...apt, status: newStatus };
+        
+        // Atualiza adminAppointments no localStorage
+        const adminAppointments = JSON.parse(localStorage.getItem('adminAppointments') || '[]');
+        const updatedAdmin = adminAppointments.map((a: Appointment) => 
+          a.id === appointmentId ? updated : a
+        );
+        localStorage.setItem('adminAppointments', JSON.stringify(updatedAdmin));
+        
+        // Atualiza appointments (histórico do usuário) no localStorage
+        const userAppointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        const updatedUser = userAppointments.map((a: Appointment) => 
+          a.id === appointmentId ? updated : a
+        );
+        localStorage.setItem('appointments', JSON.stringify(updatedUser));
+        
+        return updated;
+      }
+      return apt;
+    });
 
+    // Atualiza o estado local imediatamente usando uma cópia do array para forçar a re-renderização
+    setAppointments([...updatedAppointments]);
+    
+    // Dispara um evento personalizado para sincronizar outras abas
+    window.dispatchEvent(new Event('storage'));
+    
     toast({
       title: newStatus === 'confirmed' ? "Agendamento confirmado!" : "Agendamento cancelado!",
       description: `O agendamento foi ${newStatus === 'confirmed' ? 'confirmado' : 'cancelado'} com sucesso.`,
@@ -69,9 +95,9 @@ const Admin = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'confirmed': return 'text-green-500';
-      case 'cancelled': return 'text-red-500';
-      default: return 'text-yellow-500';
+      case 'confirmed': return 'text-green-500 bg-green-500/10 px-2 py-1 rounded';
+      case 'cancelled': return 'text-red-500 bg-red-500/10 px-2 py-1 rounded';
+      default: return 'text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded';
     }
   };
 
@@ -107,6 +133,71 @@ const Admin = () => {
     }
   }, []);
 
+  const cleanupExpiredAppointments = () => {
+    const today = new Date().toISOString().split('T')[0];
+    const updatedAppointments = appointments.filter(apt => apt.date >= today);
+    setAppointments(updatedAppointments);
+    localStorage.setItem('adminAppointments', JSON.stringify(updatedAppointments));
+  };
+
+  useEffect(() => {
+    cleanupExpiredAppointments();
+    const interval = setInterval(cleanupExpiredAppointments, 86400000); // 24 horas
+    return () => clearInterval(interval);
+  }, [appointments]);
+
+  const syncAppointments = () => {
+    // Ler de ambas as chaves
+    const userAppointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+    const adminAppointments = JSON.parse(localStorage.getItem('adminAppointments') || '[]');
+    
+    // Unificar os agendamentos
+    const allAppointments = [...userAppointments, ...adminAppointments];
+    
+    // Remover duplicatas pelo ID
+    const uniqueAppointments = allAppointments.filter(
+      (appointment, index, self) =>
+        index === self.findIndex(a => a.id === appointment.id)
+    );
+
+    // Atualizar o estado e o localStorage
+    setAppointments(uniqueAppointments);
+    localStorage.setItem('adminAppointments', JSON.stringify(uniqueAppointments));
+  };
+
+  // Chame esta função no useEffect de carregamento inicial
+  useEffect(() => {
+    syncAppointments();
+  }, []);
+
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'appointments' || e.key === 'adminAppointments') {
+        syncAppointments();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  const resetAllAppointments = () => {
+    // Limpa os agendamentos no localStorage
+    localStorage.removeItem('adminAppointments');
+    localStorage.removeItem('appointments');
+    
+    // Atualiza o estado local para um array vazio
+    setAppointments([]);
+    
+    // Dispara um evento para sincronizar outras abas
+    window.dispatchEvent(new Event('storage'));
+    
+    toast({
+      title: "Agendamentos resetados!",
+      description: "Todos os agendamentos foram removidos com sucesso.",
+    });
+  };
+
   if (!user?.isAdmin) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -127,19 +218,24 @@ const Admin = () => {
     <div className="min-h-screen bg-black">
       {/* Header */}
       <header className="bg-gray-900 border-b border-gold/20 p-4">
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center">
-            <Link to="/">
-              <Button variant="outline" size="sm" className="border-gold text-gold hover:bg-gold hover:text-black mr-4">
+        <div className="container mx-auto flex items-center">
+          <div className="flex items-center space-x-4">
+            <Link to="/" className="flex-shrink-0">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => window.location.href = "/"}
+                className="border-gold text-gold hover:bg-gold hover:text-black"
+              >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Voltar
               </Button>
             </Link>
-            <h1 className="text-2xl font-bold text-white">
-              Painel <span className="text-gold">Administrativo</span>
-            </h1>
           </div>
-          <div className="flex items-center space-x-4">
+          <h1 className="text-2xl font-bold text-white whitespace-nowrap flex-grow text-center font-cormorant">
+            Painel <span className="text-gold">Administrativo</span>
+          </h1>
+          <div className="flex items-center">
             <Button variant="outline" onClick={logout} className="border-gold text-gold hover:bg-gold hover:text-black">
               Sair
             </Button>
@@ -181,6 +277,22 @@ const Admin = () => {
 
               <div>
                 <Label className="text-white mb-2 block">Filtrar por Data</Label>
+                <DatePicker
+                  selected={selectedDate}
+                  onChange={(date: Date) => setSelectedDate(date)}
+                  inline
+                  className="bg-gray-800 border border-gold/20 text-white rounded-lg p-2 w-full"
+                  calendarClassName="bg-gray-800/90 border border-gold/20"
+                  dayClassName={(date) => {
+                    const dateStr = date.toISOString().split('T')[0];
+                    const hasAppointment = appointments.some(apt => 
+                      apt.date === dateStr && 
+                      apt.status !== 'cancelled' &&
+                      new Date(apt.date) >= new Date(new Date().setHours(0,0,0,0))
+                    );
+                    return hasAppointment ? '!bg-gold/30 !text-gold' : '';
+                  }}
+                />
               </div>
             </div>
           </Card>
@@ -206,9 +318,9 @@ const Admin = () => {
                   filteredAppointments.map((appointment) => (
                     <div
                       key={appointment.id}
-                      className="bg-gray-800 border border-gray-700 rounded-lg p-4"
+                      className="bg-gray-800 border border-gray-700 rounded-lg p-4 w-full"
                     >
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
                         <div>
                           <div className="flex items-center mb-2">
                             <User className="w-4 h-4 text-gold mr-2" />
@@ -220,43 +332,43 @@ const Admin = () => {
                           </div>
                         </div>
 
-                        <div>
+                        <div className="text-center">
                           <Label className="text-gray-400">Serviço</Label>
                           <p className="text-white">{appointment.service}</p>
                         </div>
 
-                        <div>
-                          <div className="flex items-center mb-2">
+                        <div className="flex flex-col items-end space-y-2">
+                          <div className="flex items-center">
                             <Clock className="w-4 h-4 text-gold mr-2" />
                             <span className="text-white">{appointment.time}</span>
                           </div>
-                          <span className={`font-semibold ${getStatusColor(appointment.status)}`}>
-                            {getStatusText(appointment.status)}
-                          </span>
-                        </div>
-
-                        <div className="flex space-x-2">
-                          {appointment.status === 'pending' && (
-                            <>
-                              <Button
-                                size="sm"
-                                onClick={() => handleStatusChange(appointment.id, 'confirmed')}
-                                className="bg-green-600 hover:bg-green-700 text-white"
-                              >
-                                <CheckCircle className="w-4 h-4 mr-1" />
-                                Confirmar
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleStatusChange(appointment.id, 'cancelled')}
-                                className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-                              >
-                                <XCircle className="w-4 h-4 mr-1" />
-                                Cancelar
-                              </Button>
-                            </>
-                          )}
+                          <div className="flex space-x-2">
+                            {appointment.status === 'pending' ? (
+                              <>
+                                <Button
+                                  size="sm"
+                                  onClick={() => handleStatusChange(appointment.id, 'confirmed')}
+                                  className="bg-green-600 hover:bg-green-700 text-white"
+                                >
+                                  <CheckCircle className="w-4 h-4 mr-1" />
+                                  Confirmar
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleStatusChange(appointment.id, 'cancelled')}
+                                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                                >
+                                  <XCircle className="w-4 h-4 mr-1" />
+                                  Cancelar
+                                </Button>
+                              </>
+                            ) : (
+                              <span className={`text-sm ${getStatusColor(appointment.status)}`}>
+                                {getStatusText(appointment.status)}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>

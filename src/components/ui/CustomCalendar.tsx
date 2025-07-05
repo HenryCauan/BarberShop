@@ -10,6 +10,13 @@ interface CustomCalendarProps {
 }
 
 const CustomCalendar: React.FC<CustomCalendarProps> = ({ selected, onSelect }) => {
+  const isDayDisabled = (date: Date) => {
+    const dateStr = date.toISOString().split('T')[0];
+    const savedAppointments = localStorage.getItem('appointments');
+    const appointments = savedAppointments ? JSON.parse(savedAppointments) : [];
+    return appointments.some((apt: any) => apt.date === dateStr);
+  };
+
   return (
     <DayPicker
       mode="single"
