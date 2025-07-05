@@ -1,56 +1,68 @@
+# BarberShop Elite
 
-# 💈 BarberShop
+## Visão Geral
 
-Um sistema completo para barbearias, com **design moderno**, **animações fluidas (GSAP)**, **autenticação de usuários**, **agendamento online** e um **painel administrativo** exclusivo para o proprietário.
+O BarberShop Elite é uma aplicação web moderna e elegante, desenvolvida para otimizar a gestão de barbearias. Com um design sofisticado e animações fluidas, ele oferece uma experiência de usuário aprimorada tanto para clientes quanto para administradores. Este projeto visa simplificar o agendamento de serviços, gerenciar clientes e fornecer uma plataforma robusta para proprietários de barbearias.
 
-Desenvolvido com foco em performance e experiência do usuário, utilizando **React + TypeScript + Tailwind CSS** e configurado com **Vite** para um ambiente leve e rápido.
+## Funcionalidades
 
----
+*   **Design Elegante e Moderno:** Interface de usuário intuitiva e visualmente atraente, com foco na experiência do cliente.
+*   **Animações GSAP:** Utilização da biblioteca GSAP para animações suaves e dinâmicas, proporcionando uma navegação envolvente.
+*   **Autenticação de Usuário:** Sistema seguro de login e registro para clientes e administradores.
+*   **Agendamento Online:** Clientes podem agendar serviços de forma fácil e rápida, visualizando a disponibilidade em tempo real.
+*   **Painel Administrativo:** Um painel completo para o proprietário da barbearia gerenciar agendamentos, clientes, serviços e funcionários.
 
-## 📸 Preview
+## Tecnologias Utilizadas
+
+O BarberShop Elite foi construído com as seguintes tecnologias:
+
+*   **Vite:** Ferramenta de build de frontend rápida e otimizada.
+*   **React:** Biblioteca JavaScript para construção de interfaces de usuário reativas.
+*   **TypeScript:** Superset do JavaScript que adiciona tipagem estática, melhorando a robustez e manutenibilidade do código.
+*   **Tailwind CSS:** Framework CSS utilitário para um desenvolvimento rápido e flexível de estilos.
+*   **GSAP (GreenSock Animation Platform):** Biblioteca de animação JavaScript de alto desempenho.
+
+## Instalação e Uso
+
+Para configurar e executar o projeto localmente, siga os passos abaixo:
+
+### Pré-requisitos
+
+Certifique-se de ter o Node.js e o npm (ou Yarn) instalados em sua máquina.
+
+## Preview
 
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/8fd1e753-9c7d-46da-925f-ea4a81c07120" />
 
----
-
-## ✨ Funcionalidades
-
-- 🧔 Página inicial com design elegante e animações suaves com GSAP  
-- 🔐 Sistema de autenticação de usuários (login/cadastro)  
-- 📆 Agendamento online de horários com feedback visual  
-- 🧑‍💼 Painel administrativo exclusivo para gerenciamento da barbearia  
-- 🌙 Interface responsiva com Dark Mode e layout adaptável  
-- ⚡️ Projeto otimizado com Vite para carregamento rápido  
-
----
-
-## 🛠️ Tecnologias Utilizadas
-
-- **React** — Framework para construção de interfaces modernas  
-- **TypeScript** — Tipagem estática para maior confiabilidade  
-- **Vite** — Bundler rápido e moderno  
-- **Tailwind CSS** — Estilização utilitária e responsiva  
-- **GSAP** — Biblioteca de animações para uma experiência visual envolvente  
-- **React Router Dom** — Navegação entre rotas  
-- **Context API** — Gerenciamento global de estado (ex: autenticação)
-
----
-
-## 🚀 Como rodar o projeto localmente
+### Clonar o Repositório
 
 ```bash
-# Clone o repositório
 git clone https://github.com/HenryCauan/BarberShop.git
-
-# Acesse o diretório
 cd BarberShop
-
-# Instale as dependências
-npm install
-
-# Inicie o servidor de desenvolvimento
-npm run dev
 ```
 
-🧠 Autor
-Feito com dedicação por Henry Cauan 🧔
+### Instalar Dependências
+
+```bash
+npm install
+# ou
+yarn install
+```
+
+### Executar o Projeto
+
+```bash
+npm run dev
+# ou
+yarn dev
+```
+
+
+## Contribuição
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
+
+## Licença
+
+Este projeto está licenciado sob a [Licença MIT](LICENSE).
+
