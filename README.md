@@ -57,7 +57,6 @@ npm run dev
 yarn dev
 ```
 
-O aplicativo estará disponível em `http://localhost:5173` (ou outra porta, dependendo da configuração do Vite).
 
 ## Contribuição
 
