@@ -62,7 +62,7 @@ const Services = ({ onOpenAuth }: ServicesProps) => {
       </div>
       <div className="w-full h-full flex md:flex-row flex-col gap-12 font-futura px-4">
         {services.map((service, index) => (
-          <div className="h-2/3 flex flex-col border-[1px] p-4 border-white">
+          <div key={index} className="h-2/3 flex flex-col border-[1px] p-4 border-white">
             <img className="" src={service.image} alt="" />
             <h1 className="text-lg border-b border-white py-4">{service.title}</h1>
             <p className="py-8 text-lg">{service.price}</p>
