@@ -17,12 +17,10 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
     <header className="fixed top-0 w-full bg-black/90 backdrop-blur-md z-50 font-cormorant">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
           <div className="text-2xl font-bold text-gold">
             <a href="#home">Barber</a>
           </div>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center space-x-8">
             <a href="#home" className="text-white hover:text-gold transition-colors">Início</a>
             <a href="#services" className="text-white hover:text-gold transition-colors">Serviços</a>
@@ -31,7 +29,6 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
             <a href="#contact" className="text-white hover:text-gold transition-colors">Contato</a>
           </nav>
 
-          {/* Desktop Auth & User Actions */}
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
@@ -73,7 +70,6 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-white"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -82,7 +78,6 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden absolute top-full left-0 w-full bg-black/95 shadow-lg py-4">
             <nav className="flex flex-col items-center space-y-4">

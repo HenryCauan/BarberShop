@@ -43,7 +43,6 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
         return;
       }
 
-      // Verificar se o e-mail já está cadastrado
       const { data: emailExists } = await supabase
         .from('users')
         .select('email')
@@ -60,7 +59,6 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
         return;
       }
 
-      // Verificar se o telefone já está cadastrado
       const { data: phoneExists } = await supabase
         .from('users')
         .select('phone')
@@ -144,7 +142,6 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
         return;
       }
 
-      // Verificar se é login de administrador
       if (formData.email === 'admin@barbershop.com' && formData.password === 'admin') {
         toast({
           title: "Login de Administrador",
@@ -164,7 +161,7 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
         return;
       }
 
-      // Login normal usando Supabase Auth
+  
       try {
         const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
           email: formData.email,
@@ -196,7 +193,6 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode, onAuthSuccess }: AuthM
           return;
         }
 
-        // Recuperar informações adicionais do usuário da tabela `users`
         const { data: userData, error: userError } = await supabase
           .from('users')
           .select('name, phone, email, isAdmin')

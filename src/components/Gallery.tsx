@@ -10,7 +10,6 @@ const Gallery = () => {
   useEffect(() => {
     const galleryElement = galleryRef.current;
 
-    // Aguarda um pouco para garantir que as imagens estejam prontas
     const timeoutId = setTimeout(() => {
       const animation = gsap.from(".gallery-img", {
         scale: 0.8,
@@ -27,7 +26,6 @@ const Gallery = () => {
         },
       });
 
-      // Limpeza ao desmontar o componente
       return () => {
         animation.kill();
         ScrollTrigger.getAll().forEach(trigger => {
@@ -36,7 +34,7 @@ const Gallery = () => {
           }
         });
       };
-    }, 100); // Pequeno atraso para renderização
+    }, 100);
 
     return () => clearTimeout(timeoutId);
   }, []);

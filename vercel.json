@@ -1,0 +1,8 @@
+{
+  "build": {
+    "env": {
+      "VITE_SUPABASE_URL": "url_do_supabase",
+      "VITE_SUPABASE_ANON_KEY": "chave_anonima"
+    }
+  }
+}

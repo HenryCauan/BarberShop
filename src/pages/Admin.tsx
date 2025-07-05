@@ -28,7 +28,6 @@ const Admin = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const navigate = useNavigate();
 
-  // Carregar agendamentos do localStorage
   useEffect(() => {
     const savedAppointments = localStorage.getItem('adminAppointments');
     if (savedAppointments) {
@@ -36,7 +35,6 @@ const Admin = () => {
     }
   }, []);
 
-  // Atualizar quando o localStorage mudar
   useEffect(() => {
     const handleStorageChange = () => {
       const savedAppointments = localStorage.getItem('adminAppointments');
@@ -49,7 +47,6 @@ const Admin = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  // Filtrar agendamentos por data selecionada
   const filteredAppointments = appointments.filter(apt => {
     if (selectedDate) {
       return apt.date === selectedDate.toISOString().split('T')[0];
@@ -62,14 +59,12 @@ const Admin = () => {
       if (apt.id === appointmentId) {
         const updated = { ...apt, status: newStatus };
         
-        // Atualiza adminAppointments no localStorage
         const adminAppointments = JSON.parse(localStorage.getItem('adminAppointments') || '[]');
         const updatedAdmin = adminAppointments.map((a: Appointment) => 
           a.id === appointmentId ? updated : a
         );
         localStorage.setItem('adminAppointments', JSON.stringify(updatedAdmin));
         
-        // Atualiza appointments (histórico do usuário) no localStorage
         const userAppointments = JSON.parse(localStorage.getItem('appointments') || '[]');
         const updatedUser = userAppointments.map((a: Appointment) => 
           a.id === appointmentId ? updated : a
@@ -81,10 +76,8 @@ const Admin = () => {
       return apt;
     });
 
-    // Atualiza o estado local imediatamente usando uma cópia do array para forçar a re-renderização
     setAppointments([...updatedAppointments]);
     
-    // Dispara um evento personalizado para sincronizar outras abas
     window.dispatchEvent(new Event('storage'));
     
     toast({
@@ -142,30 +135,25 @@ const Admin = () => {
 
   useEffect(() => {
     cleanupExpiredAppointments();
-    const interval = setInterval(cleanupExpiredAppointments, 86400000); // 24 horas
+    const interval = setInterval(cleanupExpiredAppointments, 86400000);
     return () => clearInterval(interval);
   }, [appointments]);
 
   const syncAppointments = () => {
-    // Ler de ambas as chaves
     const userAppointments = JSON.parse(localStorage.getItem('appointments') || '[]');
     const adminAppointments = JSON.parse(localStorage.getItem('adminAppointments') || '[]');
     
-    // Unificar os agendamentos
     const allAppointments = [...userAppointments, ...adminAppointments];
     
-    // Remover duplicatas pelo ID
     const uniqueAppointments = allAppointments.filter(
       (appointment, index, self) =>
         index === self.findIndex(a => a.id === appointment.id)
     );
 
-    // Atualizar o estado e o localStorage
     setAppointments(uniqueAppointments);
     localStorage.setItem('adminAppointments', JSON.stringify(uniqueAppointments));
   };
 
-  // Chame esta função no useEffect de carregamento inicial
   useEffect(() => {
     syncAppointments();
   }, []);
@@ -182,14 +170,11 @@ const Admin = () => {
   }, []);
 
   const resetAllAppointments = () => {
-    // Limpa os agendamentos no localStorage
     localStorage.removeItem('adminAppointments');
     localStorage.removeItem('appointments');
     
-    // Atualiza o estado local para um array vazio
     setAppointments([]);
     
-    // Dispara um evento para sincronizar outras abas
     window.dispatchEvent(new Event('storage'));
     
     toast({
@@ -216,7 +201,6 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-black">
-      {/* Header */}
       <header className="bg-gray-900 border-b border-gold/20 p-4">
         <div className="container mx-auto flex items-center">
           <div className="flex items-center space-x-4">
@@ -246,7 +230,6 @@ const Admin = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           
-          {/* Filtros e Controles */}
           <Card className="bg-gray-900/50 border-gold/20 p-6">
             <h2 className="text-xl font-bold text-white mb-4">Filtros</h2>
             
@@ -297,7 +280,6 @@ const Admin = () => {
             </div>
           </Card>
 
-          {/* Lista de Agendamentos */}
           <div className="lg:col-span-3">
             <Card className="bg-gray-900/50 border-gold/20 p-6">
               <div className="flex justify-between items-center mb-6">

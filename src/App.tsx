@@ -26,7 +26,6 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="/historico" element={<Historico />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

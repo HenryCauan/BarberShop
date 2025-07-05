@@ -1,20 +1,17 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Clock, User, Calendar as CalendarIcon, Scissors, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 const Historico = () => {
-    // Ler os agendamentos do localStorage
     const [appointments, setAppointments] = useState(() => {
         const savedAppointments = localStorage.getItem('appointments');
         return savedAppointments ? JSON.parse(savedAppointments) : [];
     });
 
-    // Atualizar quando o localStorage mudar
     useEffect(() => {
         const handleStorageChange = (e: StorageEvent) => {
             if (e.key === 'appointments') {
@@ -40,7 +37,6 @@ const Historico = () => {
 
     return (
         <div className="min-h-screen bg-black">
-            {/* Header */}
             <header className="bg-black border-b border-gold/20 p-4 font-cormorant uppercase">
                 <div className="container mx-auto flex items-center justify-between relative">
                     <Link to="/" className="flex-shrink-0">
@@ -60,7 +56,6 @@ const Historico = () => {
                 </div>
             </header>
 
-            {/* Container do Histórico */}
             <div className="container mx-auto px-4 py-8">
                 <Card className="bg-black border-gold/20 p-6">
                     <div className="flex justify-between items-center mb-6">

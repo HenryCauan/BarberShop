@@ -14,12 +14,11 @@ const Index: React.FC = () => {
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const { login } = useAuth();
 
-  // Configuração do Lenis
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2, // Duração da animação de rolagem (em segundos)
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Curva de easing
-      smooth: true, // Ativa a rolagem suave
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: true,
     } as {
       duration: number;
       easing: (t: number) => number;
@@ -34,7 +33,7 @@ const Index: React.FC = () => {
     requestAnimationFrame(raf);
 
     return () => {
-      lenis.destroy(); // Limpeza ao desmontar o componente
+      lenis.destroy();
     };
   }, []);
 

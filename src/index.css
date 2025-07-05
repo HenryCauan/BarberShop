@@ -106,7 +106,6 @@
   }
 }
 
-/* Estilos para o calendário */
 .selected-day {
   transition: all 0.2s ease;
   border-radius: 50%;
@@ -120,7 +119,6 @@
   font-weight: bold !important;
 }
 
-/* Força a cor branca nos botões e setas do calendário */
 polygon {
   fill: white !important;
   stroke: white !important;
