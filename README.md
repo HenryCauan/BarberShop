@@ -74,7 +74,7 @@ Sistema completo para gerenciamento de barbearias, incluindo funcionalidades de 
 
 ## 📸 Capturas de Tela
 
-![Image](https://github.com/user-attachments/assets/1df15a95-c2f8-4694-a140-f9e23b75b15c)
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/8fd1e753-9c7d-46da-925f-ea4a81c07120" />
 
 ## 🤝 Contribuições
 
