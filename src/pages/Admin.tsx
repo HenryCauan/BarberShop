@@ -110,7 +110,7 @@ const Admin = () => {
   };
 
   useEffect(() => {
-    const socket = io('URL_DO_SEU_SERVIDOR_WEBSOCKET');
+    const socket = io(import.meta.env.VITE_WEBSOCKET_URL);
     socket.on('newAppointment', (appointment) => {
       if (Notification.permission === 'granted') {
         new Notification('Novo Agendamento', {
