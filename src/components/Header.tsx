@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, Calendar, Settings, History } from "lucide-react";
+import { Menu, X, Calendar, Settings, History, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { ProfileDropdown } from "./ProfileDropdown";
 
 interface HeaderProps {
   onOpenAuth: (mode: 'login' | 'register') => void;
@@ -21,7 +22,7 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
             <a href="#home">Barber</a>
           </div>
 
-          {/* Desktop Navigation (Centrada) */}
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center space-x-8">
             <a href="#home" className="text-white hover:text-gold transition-colors">Início</a>
             <a href="#services" className="text-white hover:text-gold transition-colors">Serviços</a>
@@ -42,24 +43,16 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
                     </Button>
                   </Link>
                 ) : (
-                  <div className="flex items-center space-x-4">
+                  <>
                     <Link to="/booking">
                       <Button className="bg-gold hover:bg-gold/80 text-black">
                         <Calendar className="w-4 h-4 mr-2" />
                         Agendar
                       </Button>
                     </Link>
-                    <Link to="/historico">
-                      <Button className="bg-gold hover:bg-gold/80 text-black">
-                        <History className="w-4 h-4 mr-2" />
-                        Histórico
-                      </Button>
-                    </Link>
-                  </div>
+                    <ProfileDropdown />
+                  </>
                 )}
-                <Button variant="outline" onClick={logout} className="border-gold text-gold hover:bg-gold hover:text-black">
-                  Sair
-                </Button>
               </div>
             ) : (
               <div className="flex items-center space-x-4">
@@ -89,7 +82,7 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
           </button>
         </div>
 
-        {/* Mobile Menu (Aprimorado) */}
+        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden absolute top-full left-0 w-full bg-black/95 shadow-lg py-4">
             <nav className="flex flex-col items-center space-y-4">
@@ -110,7 +103,7 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
                       </Button>
                     </Link>
                   ) : (
-                    <div className="flex flex-col items-center space-y-4 w-full">
+                    <>
                       <Link to="/booking" className="w-full">
                         <Button className="w-full bg-gold hover:bg-gold/80 text-black">
                           <Calendar className="w-4 h-4 mr-2" />
@@ -123,11 +116,16 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
                           Histórico
                         </Button>
                       </Link>
-                    </div>
+                      <Button 
+                        variant="outline" 
+                        onClick={logout}
+                        className="w-full border-gold text-gold hover:bg-gold hover:text-black"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Sair
+                      </Button>
+                    </>
                   )}
-                  <Button variant="outline" onClick={logout} className="w-full border-gold text-gold hover:bg-gold hover:text-black">
-                    Sair
-                  </Button>
                 </div>
               ) : (
                 <div className="flex flex-col items-center space-y-4 w-full px-4">

@@ -108,13 +108,14 @@
 
 /* Estilos para o calendário */
 .selected-day {
+  transition: all 0.2s ease;
   border-radius: 50%;
-  transition: all 1s;
   background-color: white !important;
   color: black !important;
 }
 
 .today-day {
+  transition: all 0.2s ease;
   color: #aa8c2c !important;
   font-weight: bold !important;
 }

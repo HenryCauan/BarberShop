@@ -16,7 +16,7 @@ const Booking = () => {
   const [step, setStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = useState<string>('');
-  const [selectedService, setSelectedService] = useState<string>('');
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -38,24 +38,34 @@ const Booking = () => {
   const handleNextStep = () => setStep(prev => prev + 1);
   const handlePrevStep = () => setStep(prev => prev - 1);
 
+  const toggleService = (serviceId: string) => {
+    setSelectedServices(prev =>
+      prev.includes(serviceId)
+        ? prev.filter(id => id !== serviceId)
+        : [...prev, serviceId]
+    );
+  };
+
   const handleBooking = () => {
-    if (!selectedDate || !selectedTime || !selectedService) {
+    if (!selectedDate || !selectedTime || selectedServices.length === 0) {
       toast({ title: "Dados incompletos", description: "Por favor, preencha todas as informações.", variant: "destructive" });
       return;
     }
 
-    // Criar o objeto do agendamento
     const newAppointment = {
       id: Date.now().toString(),
       clientName: user?.name || "Cliente Anônimo",
       clientPhone: user?.phone || "Não informado",
-      service: services.find(s => s.id === selectedService)?.name || "",
-      date: selectedDate.toISOString().split('T')[0], // Formato YYYY-MM-DD
+      services: selectedServices.map(id => services.find(s => s.id === id)?.name || ""),
+      date: selectedDate.toISOString().split('T')[0],
       time: selectedTime,
       status: "pending" as const,
+      totalPrice: selectedServices.reduce((total, id) => {
+        const service = services.find(s => s.id === id);
+        return total + (service ? parseInt(service.price.replace(/\D/g, '')) : 0);
+      }, 0),
     };
 
-    // Salvar em ambas as chaves para sincronização
     const savedUserAppointments = localStorage.getItem('appointments');
     const userAppointments = savedUserAppointments ? JSON.parse(savedUserAppointments) : [];
     localStorage.setItem('appointments', JSON.stringify([...userAppointments, newAppointment]));
@@ -64,13 +74,11 @@ const Booking = () => {
     const adminAppointments = savedAdminAppointments ? JSON.parse(savedAdminAppointments) : [];
     localStorage.setItem('adminAppointments', JSON.stringify([...adminAppointments, newAppointment]));
 
-    // Notificar o usuário
     toast({ 
       title: "Agendamento solicitado!", 
       description: `Seu horário para ${newAppointment.date} às ${newAppointment.time} foi solicitado. Aguarde confirmação.` 
     });
 
-    // Redirecionar para a página inicial após 2 segundos
     setTimeout(() => {
       navigate("/");
     }, 2000);
@@ -100,15 +108,37 @@ const Booking = () => {
   };
 
   const ServiceStep = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {services.map((service) => (
-        <Card key={service.id} onClick={() => { setSelectedService(service.id); handleNextStep(); }} className="bg-black border border-gray-800 p-6 rounded-lg shadow-lg hover:border-[#aa8c2c] transition-all duration-300 cursor-pointer flex flex-col items-center text-center">
-          {service.icon}
-          <h3 className="text-xl font-cormorant text-white mt-4">{service.name}</h3>
-          <p className="text-gray-400 text-sm">{service.duration}</p>
-          <p className="text-2xl font-bold text-[#aa8c2c] mt-4">{service.price}</p>
-        </Card>
-      ))}
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {services.map((service) => (
+          <Card
+            key={service.id}
+            onClick={() => toggleService(service.id)}
+            className={`bg-black border border-gray-800 p-6 rounded-lg shadow-lg hover:border-[#aa8c2c] transition-all duration-300 cursor-pointer flex flex-col items-center text-center ${
+              selectedServices.includes(service.id) ? "border-[#aa8c2c]" : ""
+            }`}
+          >
+            {service.icon}
+            <h3 className="text-xl font-cormorant text-white mt-4">{service.name}</h3>
+            <p className="text-gray-400 text-sm">{service.duration}</p>
+            <p className="text-2xl font-bold text-[#aa8c2c] mt-4">{service.price}</p>
+            {selectedServices.includes(service.id) && (
+              <div className="mt-2 w-6 h-6 rounded-full bg-[#aa8c2c] flex items-center justify-center">
+                <CheckCircle className="w-4 h-4 text-black" />
+              </div>
+            )}
+          </Card>
+        ))}
+      </div>
+      <div className="flex justify-end">
+        <Button
+          onClick={handleNextStep}
+          disabled={selectedServices.length === 0}
+          className="bg-[#aa8c2c] hover:bg-[#aa8c2c]/90 text-black font-bold text-lg py-4 px-8 rounded-lg transition-all duration-300"
+        >
+          Avançar <ChevronRight className="w-5 h-5 ml-2" />
+        </Button>
+      </div>
     </div>
   );
 
@@ -173,30 +203,47 @@ const Booking = () => {
     );
   };
 
-  const ConfirmationStep = () => (
-    <Card className="bg-black border border-[#aa8c2c] p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
-      <h2 className="text-3xl font-cormorant text-white mb-6 text-center">Confirme seu Agendamento</h2>
-      <div className="space-y-6 mb-8 text-lg">
-        <div className="flex justify-between items-center border-b border-gray-700 pb-3">
-          <span className="text-gray-400">Serviço:</span>
-          <span className="text-white font-semibold">{services.find(s => s.id === selectedService)?.name}</span>
+  const ConfirmationStep = () => {
+    const totalPrice = selectedServices.reduce((total, id) => {
+      const service = services.find(s => s.id === id);
+      return total + (service ? parseInt(service.price.replace(/\D/g, '')) : 0);
+    }, 0);
+
+    return (
+      <Card className="bg-black border border-[#aa8c2c] p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+        <h2 className="text-3xl font-cormorant text-white mb-6 text-center">Confirme seu Agendamento</h2>
+        <div className="space-y-6 mb-8 text-lg">
+          <div className="border-b border-gray-700 pb-3">
+            <span className="text-gray-400">Serviços:</span>
+            <ul className="mt-2 space-y-2">
+              {selectedServices.map(id => {
+                const service = services.find(s => s.id === id);
+                return (
+                  <li key={id} className="flex justify-between items-center">
+                    <span className="text-white">{service?.name}</span>
+                    <span className="text-[#aa8c2c]">{service?.price}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <div className="flex justify-between items-center border-b border-gray-700 pb-3">
+            <span className="text-gray-400">Data:</span>
+            <span className="text-white font-semibold">{selectedDate?.toLocaleDateString('pt-BR')}</span>
+          </div>
+          <div className="flex justify-between items-center border-b border-gray-700 pb-3">
+            <span className="text-gray-400">Horário:</span>
+            <span className="text-white font-semibold">{selectedTime}</span>
+          </div>
+          <div className="flex justify-between items-center pt-4">
+            <span className="text-xl font-cormorant text-white">Total:</span>
+            <span className="text-3xl font-bold text-[#aa8c2c]">R$ {totalPrice}</span>
+          </div>
         </div>
-        <div className="flex justify-between items-center border-b border-gray-700 pb-3">
-          <span className="text-gray-400">Data:</span>
-          <span className="text-white font-semibold">{selectedDate?.toLocaleDateString('pt-BR')}</span>
-        </div>
-        <div className="flex justify-between items-center border-b border-gray-700 pb-3">
-          <span className="text-gray-400">Horário:</span>
-          <span className="text-white font-semibold">{selectedTime}</span>
-        </div>
-        <div className="flex justify-between items-center pt-4">
-          <span className="text-xl font-cormorant text-white">Total:</span>
-          <span className="text-3xl font-bold text-[#aa8c2c]">{services.find(s => s.id === selectedService)?.price}</span>
-        </div>
-      </div>
-      <Button onClick={handleBooking} className="w-full bg-[#aa8c2c] hover:bg-[#aa8c2c]/90 text-black font-bold text-lg py-7 rounded-lg transition-all duration-300 shadow-lg shadow-[#aa8c2c]/20">Confirmar</Button>
-    </Card>
-  );
+        <Button onClick={handleBooking} className="w-full bg-[#aa8c2c] hover:bg-[#aa8c2c]/90 text-black font-bold text-lg py-7 rounded-lg transition-all duration-300 shadow-lg shadow-[#aa8c2c]/20">Confirmar</Button>
+      </Card>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-black font-futura text-white">
@@ -224,7 +271,9 @@ const Booking = () => {
               </Button>
             </Link>
           )}
-          <h1 className="text-3xl font-cormorant text-white uppercase tracking-widest">Agendar Horário</h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-cormorant text-white uppercase tracking-widest truncate max-w-[50vw]">
+            Agendar Horário
+          </h1>
           <div className="w-24 flex items-center justify-end space-x-2">
             {[1, 2, 3].map(s => <div key={s} className={`w-3 h-3 rounded-full transition-all duration-300 ${step === s ? 'bg-[#aa8c2c]' : 'bg-gray-600'}`}></div>)}
           </div>
